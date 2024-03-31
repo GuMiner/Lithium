@@ -2,8 +2,6 @@
 A rewrite of Helium in Flask
 
 # Setup
-## Flask
-https://flask.palletsprojects.com/en/3.0.x/installation/
 
 ## IDE Functionality
 VSCode extensions:
@@ -17,6 +15,28 @@ python -m venv .venv
 
 ```batch
 pip install Flask
+pip install Flask-Assets
 pip install watchdog
+pip install pytailwindcss
 ```
----
+
+```
+tailwindcss_install
+tailwindcss init
+```
+
+## Development Debugging
+```batch
+tailwindcss -i ./static/css/main.css -o ./static/dist/main.css --watch
+flask --debug run
+```
+
+## Production release
+```bash
+# Minify CSS
+tailwindcss -i ./static/css/main.css -o ./static/dist/main.css --minify
+```
+
+# Reference
+## Flask
+https://flask.palletsprojects.com/en/3.0.x/
