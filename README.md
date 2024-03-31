@@ -17,24 +17,18 @@ python -m venv .venv
 pip install Flask
 pip install Flask-Assets
 pip install watchdog
-pip install pytailwindcss
-```
-
-```
-tailwindcss_install
-tailwindcss init
+pip install cssmin
+pip install jsmin
 ```
 
 ## Development Debugging
 ```batch
-tailwindcss -i ./static/css/main.css -o ./static/dist/main.css --watch
 flask --debug run
 ```
 
 ## Production release
 ```bash
-# Minify CSS
-tailwindcss -i ./static/css/main.css -o ./static/dist/main.css --minify
+TODO
 ```
 
 # Reference

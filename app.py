@@ -4,10 +4,10 @@ from flask_assets import Bundle, Environment
 app = Flask(__name__)
 
 assets = Environment(app)
-css = Bundle("css/*.css", output="dist/main.css")
-js = Bundle("js/**/*.js", output="dist/main.js")
+css = Bundle("../css/*.css", filters='cssmin', output="main.css")
+js = Bundle("../js/*.js", filters='jsmin', output="main.js")
 
-assets.register("css", css)
+assets.register('css', css)
 assets.register("js", js)
 css.build()
 js.build()
