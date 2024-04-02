@@ -23,7 +23,9 @@ pip install jsmin
 
 ## Development Debugging
 ```batch
+npx webpack
 flask --debug run
+
 ```
 
 ## Production release

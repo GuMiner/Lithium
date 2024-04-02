@@ -1,16 +1,8 @@
 from flask import Flask, render_template
-from flask_assets import Bundle, Environment
+from flask_compress import Compress
 
 app = Flask(__name__)
-
-assets = Environment(app)
-css = Bundle("../css/*.css", filters='cssmin', output="main.css")
-js = Bundle("../js/*.js", filters='jsmin', output="main.js")
-
-assets.register('css', css)
-assets.register("js", js)
-css.build()
-js.build()
+Compress(app)
 
 @app.route("/")
 def hello_world():
