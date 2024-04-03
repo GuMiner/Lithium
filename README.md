@@ -27,7 +27,8 @@ pip install jsmin
 sass scss/index.scss scss/index.css
 
 # Can also add in --watch for JS changes.
-esbuild js/index.ts --bundle --outdir=static
+esbuild js/index.ts --bundle --outdir=static --sourcemap
+esbuild js/game.ts --bundle --outdir=static --sourcemap
 
 flask --debug run
 ```
@@ -35,6 +36,7 @@ flask --debug run
 ## Production release
 ```bash
 esbuild js/index.ts --bundle --outdir=static --minify
+esbuild js/game.ts --bundle --outdir=static --minify
 ```
 
 # Reference

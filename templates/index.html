@@ -1,5 +1,13 @@
 {% extends '_base.html' %}
 
 {% block content %}
-<p>Hello world2!</p>
+<nav>
+  <ul>
+    <li><a href="{{ url_for('index') }}"><strong>Helium</strong></a></li>
+  </ul>
+  <ul>
+    <li><a href="{{ url_for('puzzles') }}">Puzzles</a></button></li>
+    <li><a href="{{ url_for('game')}}">Game</a></li>
+  </ul>
+</nav>
 {% endblock content %}

@@ -1,0 +1,75 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<details>
+  <summary role="button" class="secondary">Instructions</summary>
+  <div class="grid">
+    <div>
+      <h4>Navigation</h4>
+      <p>
+        Use the buttons at the top to open and collapse data tabs.
+        <br />
+        Data will remain in each tab if it is collapsed, but will be discarded if the page is refreshed.
+      </p>
+      <h4>Searching</h4>
+      <p>
+        All searches support SQL queries. Use a '_' for letters which must exist and a '%' as a wildcard.
+        <br />
+        <i>Examples</i>
+      <ul>
+        <li>Find all results which start with 'fish': <b>fish%</b></li>
+        <li>Find all results which contain 'cheese': <b>%cheese%</b></li>
+        <li>Find all single-letter results: <b>_</b></li>
+        <li>Find all two letter results which start with 'a': <b>a_</b></li>
+      </ul>
+      </p>
+    </div>
+    <div>
+      <h4>About</h4>
+      <p>
+          These puzzle tools are built on top several technologies. <br />
+          The underlying website runs on a Flask server with ... for UI, ... <br />
+          sqlite3 provides SQL database support, with Axios simplifying the interactions between Typescript and Web API. <br />
+          Finally, ...
+      </p>
+
+      <h4>Support</h5>
+      <p>
+          For all support issues, please file an issue on the <a href="https://github.com/guminer/psr/issues">issue tracker page</a>.
+      </p>
+    </div>
+  </div>
+</details>
+<details open>
+  <summary>Number Conversion</summary>
+  <div class="grid">
+    <form autocomplete="off">
+      <fieldset>
+        <label>
+          Input
+          <input id="numbersToConvert" type="text" name="numberInput" placeholder="Enter numbers here" aria-label="InputNumbers"
+                 oninput="convertNumbers()" />
+        </label>
+      </fieldset>
+    </form>
+    <form autocomplete="off">
+      <fieldset>
+        <label>
+          Output
+          <textarea id="convertedNumbers" readonly>
+          </textarea>
+        </label>
+      </fieldset>
+    </form>
+    <div>
+      Input base:
+      <input id="inputBase" type="number" name="base" placeholder="(10)" aria-label="InputBase"
+             oninput="convertNumbers()" />
+      Delimiter
+      <input id="inputDelimiter" type="text" name="delimiter" placeholder="(space)" aria-label="Delimiter"
+             oninput="convertNumbers()"  />
+
+    </div>
+  </div>
+</details>
+{% endblock content %}
