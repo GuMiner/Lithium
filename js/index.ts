@@ -1,3 +1,3 @@
-import "../scss/index.scss";
+import "../scss/index.css";
 import 'htmx.org';
-import "./demo.ts"
+import "./demo.js"

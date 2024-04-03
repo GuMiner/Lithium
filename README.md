@@ -22,17 +22,25 @@ pip install jsmin
 ```
 
 ## Development Debugging
-```batch
-npx webpack
-flask --debug run
+```bash
+# Can add in --watch if necessary, although my SCSS changes super rarely.
+sass scss/index.scss scss/index.css
 
+# Can also add in --watch for JS changes.
+esbuild js/index.ts --bundle --outdir=static
+
+flask --debug run
 ```
 
 ## Production release
 ```bash
-TODO
+esbuild js/index.ts --bundle --outdir=static --minify
 ```
 
 # Reference
-## Flask
-https://flask.palletsprojects.com/en/3.0.x/
+- **Flask**: https://flask.palletsprojects.com/en/3.0.x/
+- **Jinja**: https://jinja.palletsprojects.com/en/3.0.x/
+- **htmx**: https://htmx.org/docs/#introduction
+- **picocss**: https://picocss.com/docs
+- **babylonjs**: https://doc.babylonjs.com/journey
+

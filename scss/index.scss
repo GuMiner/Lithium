@@ -1,4 +1,4 @@
-@use "@picocss/pico/scss/pico" with (
+@use "../node_modules/@picocss/pico/scss/pico" with (
   $enable-semantic-container: false,
   $enable-classes: true,
   $modules: (
