@@ -27,16 +27,50 @@
     <div>
       <h4>About</h4>
       <p>
-          These puzzle tools are built on top several technologies. <br />
-          The underlying website runs on a Flask server with ... for UI, ... <br />
-          sqlite3 provides SQL database support, with Axios simplifying the interactions between Typescript and Web API. <br />
-          Finally, ...
+        These puzzle tools are built on top several technologies. <br />
+        The underlying website runs on a Flask server with ... for UI, ... <br />
+        sqlite3 provides SQL database support, with Axios simplifying the interactions between Typescript and Web API.
+        <br />
+        Finally, ...
       </p>
 
       <h4>Support</h5>
-      <p>
-          For all support issues, please file an issue on the <a href="https://github.com/guminer/psr/issues">issue tracker page</a>.
-      </p>
+        <p>
+          For all support issues, please file an issue on the <a href="https://github.com/guminer/psr/issues">issue
+            tracker page</a>.
+        </p>
+    </div>
+  </div>
+</details>
+<details open>
+  <summary>Word Search</summary>
+  <div class="grid">
+    <form autocomplete="off">
+      <fieldset>
+        <label>
+          Output
+          <div id="foundWords">
+            <textarea readonly>
+            </textarea>
+          </div>
+        </label>
+      </fieldset>
+    </form>
+    <div>
+      <form>
+        <fieldset>
+          Query:
+          <input id="wordSearchQuery" type="text" name="wordQuery" placeholder="" aria-label="InputBase"
+            hx-post="/puzzles/words" hx-trigger="keyup delay:125ms changed"
+            hx-include="next #anagramCheckbox" hx-target="previous #foundWords" />
+          <label>
+            <input id="anagramCheckbox" type="checkbox" name="anagrams"
+                   hx-post="/puzzles/words"
+                   hx-include="previous #wordSearchQuery" hx-target="previous #foundWords" />
+            Check for anagrams
+          </label>
+        </fieldset>
+      </form>
     </div>
   </div>
 </details>
@@ -47,8 +81,8 @@
       <fieldset>
         <label>
           Input
-          <input id="numbersToConvert" type="text" name="numberInput" placeholder="Enter numbers here" aria-label="InputNumbers"
-                 oninput="convertNumbers()" />
+          <input id="numbersToConvert" type="text" name="numberInput" placeholder="Enter numbers here"
+            aria-label="InputNumbers" oninput="convertNumbers()" />
         </label>
       </fieldset>
     </form>
@@ -64,10 +98,10 @@
     <div>
       Input base:
       <input id="inputBase" type="number" name="base" placeholder="(10)" aria-label="InputBase"
-             oninput="convertNumbers()" />
+        oninput="convertNumbers()" />
       Delimiter
       <input id="inputDelimiter" type="text" name="delimiter" placeholder="(space)" aria-label="Delimiter"
-             oninput="convertNumbers()"  />
+        oninput="convertNumbers()" />
 
     </div>
   </div>
