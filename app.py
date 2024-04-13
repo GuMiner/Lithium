@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, g
 from flask_compress import Compress
+from pages import puzzles
 
 # TODO -- move into a separate file -- blueprints
 import sqlite3
@@ -24,7 +25,7 @@ def index():
     return render_template("index.html")
 
 @app.route("/puzzles")
-def puzzles():
+def puzzles_page():
     return render_template("puzzles.html")
 
 @app.route("/puzzles/words", methods=['POST'])
@@ -35,15 +36,19 @@ def puzzles_word_query():
     prefix = '<textarea id="resultingWords" readonly>'
 
     limit = 200
-    words = [word[0] for word in get_puzzle_db()
-                .execute("SELECT word from words WHERE word LIKE ? ORDER BY word LIMIT ?", [query, limit])]
+    if anagrams:
+        words = [word[0] for word in get_puzzle_db()
+                 .execute(puzzles.get_anagram_query(query), [limit])]
+    else:
+        words = [word[0] for word in get_puzzle_db()
+                .execute(puzzles.get_word_query(), [query, limit])]
 
     limitText = ' (Limited!)' if len(words) == limit else ''
-    postfix = f'</textarea><small>{anagrams}{len(words)}{limitText}</small>'
+    postfix = f'</textarea><small>{len(words)}{limitText}</small>'
     return prefix + '\n'.join(words) + postfix
 
 @app.route("/game")
-def game():
+def game_page():
     return render_template("game.html")
 
 if __name__ == "__main__":
