@@ -45,6 +45,22 @@
 <details open>
   <summary>Word Search</summary>
   <div class="grid">
+    <div>
+      <form>
+        <fieldset>
+          Query:
+          <input id="wordSearchQuery" type="text" name="wordQuery" placeholder="" aria-label="InputBase"
+            hx-post="/puzzles/words" hx-trigger="keyup delay:125ms changed"
+            hx-include="next #anagramCheckbox" hx-target="next #foundWords" />
+          <label>
+            <input id="anagramCheckbox" type="checkbox" name="anagrams"
+                   hx-post="/puzzles/words"
+                   hx-include="previous #wordSearchQuery" hx-target="next #foundWords" />
+            Check for anagrams
+          </label>
+        </fieldset>
+      </form>
+    </div>
     <form autocomplete="off">
       <fieldset>
         <label>
@@ -56,22 +72,6 @@
         </label>
       </fieldset>
     </form>
-    <div>
-      <form>
-        <fieldset>
-          Query:
-          <input id="wordSearchQuery" type="text" name="wordQuery" placeholder="" aria-label="InputBase"
-            hx-post="/puzzles/words" hx-trigger="keyup delay:125ms changed"
-            hx-include="next #anagramCheckbox" hx-target="previous #foundWords" />
-          <label>
-            <input id="anagramCheckbox" type="checkbox" name="anagrams"
-                   hx-post="/puzzles/words"
-                   hx-include="previous #wordSearchQuery" hx-target="previous #foundWords" />
-            Check for anagrams
-          </label>
-        </fieldset>
-      </form>
-    </div>
   </div>
 </details>
 <details open>

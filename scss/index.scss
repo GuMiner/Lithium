@@ -7,7 +7,7 @@
     "components/accordion": true,
     "components/nav": true,
     "components/card": true,
-    "content/code": false,
+    "content/code": true,
     "forms/input-color": false,
     "forms/input-date": false,
     "forms/input-file": false,
@@ -22,3 +22,15 @@
     "utilities/reduce-motion": false
   )
 );
+
+// Modified so that the grid holds the logo image if large enough
+// https://github.com/picocss/examples/blob/master/v1-bootstrap-grid/css/pico-bootstrap-grid.css
+@media (min-width: 560px) {
+  #offset-grid {
+    grid-template-columns: minmax(192px, 1fr) 4fr;
+  }
+}
+
+#offset-grid > * {
+  grid-template-columns: 1fr;
+}

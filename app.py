@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, render_template, request, g
 from flask_compress import Compress
 from pages import puzzles
@@ -7,6 +8,11 @@ import sqlite3
 
 app = Flask(__name__)
 Compress(app)
+
+
+@app.context_processor
+def inject_year():
+    return {'year': datetime.date.today().year}
 
 def get_puzzle_db():
     db = getattr(g, '_puzzle_data_db', None)
@@ -23,6 +29,14 @@ def close_connection(exception):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/attributions")
+def attributions():
+    return render_template("attributions.html")
+
+@app.route("/diagnostics")
+def diagnostics():
+    return render_template("diagnostics.html")
 
 @app.route("/puzzles")
 def puzzles_page():
