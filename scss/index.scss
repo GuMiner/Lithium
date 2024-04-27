@@ -23,7 +23,7 @@
   )
 );
 
-// Modified so that the grid holds the logo image if large enough
+// Modified so that the grid with the logo doesn't squish the logo, but also is offset so the logo isn't too big
 // https://github.com/picocss/examples/blob/master/v1-bootstrap-grid/css/pico-bootstrap-grid.css
 @media (min-width: 560px) {
   #offset-grid {
@@ -33,4 +33,46 @@
 
 #offset-grid > * {
   grid-template-columns: 1fr;
+}
+
+// Basic border to make the nav area more visible
+.nav-border {
+  border-style: outset;
+  border-width: 2px;
+  border-color: #bababa;
+  border-radius: 12px;
+  margin-left: 6px;
+}
+
+// Project CSS
+.tag-software {
+  background: lightblue;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #bababa;
+  border-radius: 6px;
+  margin: 3px;
+  padding: 3px;
+}
+
+.tag-games {
+  background: lightgreen;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #bababa;
+  border-radius: 6px;
+  margin: 3px;
+  padding: 3px;
+}
+
+.no-grid-wrap {
+  grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+}
+
+.project-image-card {
+  width: 352px; // 320 px + 2x16px borders = 352px;
+}
+
+.align-right {
+  text-align: right;
 }

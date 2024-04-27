@@ -1,18 +1,30 @@
 import datetime
+import os
+import sys
+from werkzeug import exceptions
 from flask import Flask, render_template, request, g
 from flask_compress import Compress
 from pages import puzzles
+
+# Hacky, but less so than Python's historical module vs package import and package resolution scheme already is.
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+import projects
 
 # TODO -- move into a separate file -- blueprints
 import sqlite3
 
 app = Flask(__name__)
 Compress(app)
+app.register_blueprint(projects.projects)
 
-
+# Used by all pages for the ©️ text.
 @app.context_processor
 def inject_year():
     return {'year': datetime.date.today().year}
+
+@app.errorhandler(exceptions.NotFound)
+def handle_not_found(error):
+    return render_template("errors/not_found.html")
 
 def get_puzzle_db():
     db = getattr(g, '_puzzle_data_db', None)

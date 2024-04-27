@@ -14,11 +14,12 @@
     <main class="container">
       <nav>
         <ul>
-          <li><a href="{{ url_for('index') }}"><strong>Helium</strong></a></li>
+          <li><a class="nav-border" href="{{ url_for('index') }}"><strong>Helium</strong></a></li>
         </ul>
         <ul>
-          <li><a href="{{ url_for('puzzles_page') }}">Puzzles</a></button></li>
-          <li><a href="{{ url_for('game_page')}}">Game</a></li>
+          <li><a class="nav-border" href="{{ url_for('projects.index') }}">Projects</a></li>
+          <li><a class="nav-border" href="{{ url_for('puzzles_page') }}">Puzzles</a></li>
+          <li><a class="nav-border" href="{{ url_for('game_page')}}">Game</a></li>
         </ul>
       </nav>
       {% block content %}

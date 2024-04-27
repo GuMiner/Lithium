@@ -165,3 +165,4 @@ db/*
 
 # Large files that don't need to be in GitHub
 static/aboutme/*
+static/projects/*

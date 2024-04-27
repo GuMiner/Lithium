@@ -1,0 +1,35 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<nav>
+  <ul></ul>
+  <ul>
+    <li><a class="nav-border" href="{{ url_for('projects.index') }}"><b>Projects</b></a></li>
+    <li><a class="nav-border" href="{{ url_for('projects.index') }}">Hardware</a></li>
+    <li><a class="nav-border" href="{{ url_for('projects.index') }}">Software</a></li>
+    <li><a class="nav-border" href="{{ url_for('projects.index')}}">Games</a></li>
+  </ul>
+  <ul></ul> <!-- Force-align the projects list to the left -->
+  <ul></ul>
+  <ul></ul>
+  <ul></ul>
+  <ul></ul>
+</nav>
+
+<div>
+  <!-- card testing... For next time -- loop through data and render here. -->
+  <article class="project-image-card">
+    <img src="/static/projects/game-projects/AsteroidaGraphica.png" />
+    <footer>
+      <div class="grid no-grid-wrap">
+        <a href="https://github.com/guminer/asteroidagraphica">Asteroida Graphica</a>
+        <div class="align-right">
+          <small>December 2015</small>
+        </div>
+      </div>
+      <br />
+      <span class="tag-software">Software</span><span class="tag-games">Games</span>
+    </footer>
+  </article>
+</div>
+{% endblock content %}
