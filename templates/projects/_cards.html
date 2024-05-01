@@ -1,0 +1,25 @@
+
+<div class="container" style="text-align: center;">
+  {% for project in projects %}
+  <article class="project-image-card align-left">
+    <a href="{{ project.link }}" class="relative-position">
+      <img src="{{ project.image }}" alt="{{ project.name }} example" />
+      {% if 'github.com/' in project.link %}
+        <img alt="OnGitHub overlay" src="/static/projects/OnGitHubOverlay.png" class="github-overlay" />
+      {% endif %}
+    </a>
+    <footer>
+      <div class="grid no-grid-wrap">
+        <a href="{{ project.link }}">{{ project.name }}</a>
+        <div class="align-right">
+          <small>{{ project.date }}</small>
+        </div>
+      </div>
+      <br />
+      {% for tag in project.tags %} {# There can be multiple tags, with the CSS specifier in lowercase #}
+      <span class="tag-{{tag.lower()}}">{{ tag }}</span>
+      {% endfor %}
+    </footer>
+  </article>
+  {% endfor %}
+</div>
