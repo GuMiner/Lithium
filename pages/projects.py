@@ -3,7 +3,7 @@ from flask import Blueprint, render_template
 from markupsafe import escape
 from typing import List
 
-projects = Blueprint('projects', __name__, url_prefix='/projects', template_folder='templates/projects')
+projects = Blueprint('projects', __name__, url_prefix='/projects', template_folder='../templates/projects')
 
 GITHUB_PREFIX = "https://github.com/GuMiner"
 

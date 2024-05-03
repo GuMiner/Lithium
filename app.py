@@ -1,16 +1,10 @@
 import datetime
-import os
-import sys
 from werkzeug import exceptions
 from flask import Flask, render_template, request, g
 from flask_compress import Compress
-from pages import puzzles
+from pages import projects, puzzles
 
-# Hacky, but less so than Python's historical module vs package import and package resolution scheme already is.
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-import projects
-
-# TODO -- move into a separate file -- blueprints
+# TODO -- move move of this into separate files.
 import sqlite3
 
 app = Flask(__name__)
@@ -79,3 +73,4 @@ def game_page():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    

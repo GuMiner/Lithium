@@ -16,6 +16,7 @@ python -m venv .venv
 ```batch
 pip install Flask
 pip install Flask-Assets
+pip install Flask-Compress
 pip install watchdog
 pip install cssmin
 pip install jsmin
