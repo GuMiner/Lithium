@@ -1,6 +1,6 @@
 # Install packages
 apt-get update
-apt-get install htop supervisor ufw nginx vnstat
+apt-get install htop supervisor ufw nginx vnstat jq
 apt install python3.11-venv
 
 # Setup default firewall
@@ -36,43 +36,28 @@ pip install gunicorn
 # Verify that booting with guincorn appears to work
 gunicorn -w 4 app:app
 
-# Setup the nginx reverse proxy configuration
+# Setup the nginx reverse proxy configuration (lithium.nginx)
 nano /etc/nginx/sites-available/lithium
-
->>>
-server {
-    listen 80;
-    server_name helium24.net;
-    access_log  /var/log/nginx/helium24.log;
-
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
-<<<
-
+...
 ln -s /etc/nginx/sites-available/lithium /etc/nginx/sites-enabled/
 nginx -t # Test the config
 systemctl restart nginx
 
 # Restart gunicorn and verify the site is accessible and running
-# TODO supervisorctl setup
-# TODO see also:
-https://github.com/GuMiner/Helium24/blob/main/Helium/Setup/Helium24AddonInstallation.txt
+# Setup auto-run+boot config
+nano /etc/supervisor/conf.d/lithium.conf
+...
+# Load and verify that lithium is running
+supervisorctl reload
+supervisorctl status
 
 # Enable bandwidth monitoring and auto-shutdown
 # Modified from https://blog.ezequiel-garzon.com/using-vnstat-to-shut-down-a-server
+nano /root/bandwidth-limit.sh
+...
+chmod +x /root/bandwidth-limit.sh
 
-nano /root/bandwidth-check.sh
->>>
+# Run every 5th minute:
+crontab -e
 
-<<<
-
-chmod +x /root/bandwidth-check.sh
-
-# Every 5th minute:
-*/5 * * * * /root/bandwidth-check.sh >> /var/log/myjob.log 2>&1
+*/5 * * * * /root/bandwidth-limit.sh >> /var/log/bandwidth-limit.log 2>&1
