@@ -25,10 +25,12 @@ pip install jsmin
 ```bash
 # Can add in --watch if necessary, although my SCSS changes super rarely.
 sass scss/index.scss scss/index.css
+sass scss/math.scss scss/math.css
 
 # Can also add in --watch for JS changes.
 esbuild js/index.ts --bundle --outdir=static --sourcemap
 esbuild js/game.ts --bundle --outdir=static --sourcemap
+esbuild js/math.ts --bundle  "--external:fonts/KaTeX*" --outdir=static --sourcemap 
 
 flask --debug run
 ```
@@ -37,6 +39,7 @@ flask --debug run
 ```bash
 esbuild js/index.ts --bundle --outdir=static --minify
 esbuild js/game.ts --bundle --outdir=static --minify
+esbuild js/math.ts --bundle  "--external:fonts/KaTeX*" --outdir=static --minify
 ```
 
 # Reference

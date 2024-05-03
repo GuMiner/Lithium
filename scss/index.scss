@@ -1,6 +1,3 @@
-// @use "../node_modules/katex/dist/fonts/KaTeX_Caligraphic-Bold.ttf";
-@use "../node_modules/katex/dist/katex.min.css";
-
 @use "../node_modules/@picocss/pico/scss/pico" with (
   $enable-responsive-spacings: false,
   $enable-responsive-typography: false,
@@ -101,4 +98,8 @@ base-tag {
 
 .relative-position {
   position: relative;
+}
+
+.no-space {
+  margin: 0px;
 }

@@ -1,8 +1,16 @@
 {% extends '_base.html' %}
 
+{% block css %}
+<link rel="stylesheet" href="/static/math.css">
+{% endblock css %}
+
 {% block content %}
-{% include "_games_header.html" %}
+{% include "_projects_header.html" %}
 <b>hi</b>
 <br/>
 $$\vec{F}=q(\vec{E} + \vec{v}\times\vec{B})$$
 {% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript" src="/static/math.js"></script>
+{% endblock scripts %}

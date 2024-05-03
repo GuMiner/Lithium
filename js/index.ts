@@ -1,6 +1,5 @@
 import "../scss/index.css";
 import 'htmx.org';
-import renderMathInElement from 'katex/contrib/auto-render/auto-render.js';
 
 function getById(id: string) {
     const input = document.getElementById(id) as HTMLInputElement | null;
@@ -47,8 +46,3 @@ function convertNumbers() {
 }
 
 (window as any).convertNumbers = convertNumbers;
-
-window.onload = (event) =>
-{
-    renderMathInElement(document.body);
-};

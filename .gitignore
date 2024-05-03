@@ -157,8 +157,10 @@ node_modules
 
 # Generated files
 scss/index.cs*
+scss/math.cs*
 static/index.*
 static/game.*
+static/math.*
 
 # Database info
 db/*
