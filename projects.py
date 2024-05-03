@@ -13,6 +13,7 @@ class Project:
     link: str
     image: str
     date: str
+    updated: str
     tags: List[str]
 
 
@@ -20,32 +21,46 @@ class Project:
 def index():
     return render_template("projects.html")
 
+image_prefix = '/static/projects/game-projects'
+games_data = {
+    "asteroida": Project("Asteroida Graphica", f"{GITHUB_PREFIX}/AsteroidaGraphica", f"{image_prefix}/AsteroidaGraphica.png",
+                         "December 2015", "...", ["Software", "Games"]),
+    "temper": Project("Temper Fine", f"{GITHUB_PREFIX}/TemperFine", f"{image_prefix}/TemperFine.png",
+                      "February 2016", "...", ["Software", "Games"]),
+    "agow": Project("agow", f"{GITHUB_PREFIX}/agow", f"{image_prefix}/Agow.png",
+                    "March 2017", "...", ["Software", "Games"]),
+    "adventure": Project("C# Adventure API", f"{GITHUB_PREFIX}/Adventure", f"{image_prefix}/AdventurePort.png",
+                         "October 2017", "...", ["Software"])
+}
+
 @projects.route("/games")
 def games():
-    image_prefix = '/static/projects/game-projects'
-    games = [
-        Project("Asteroida Graphica", f"{GITHUB_PREFIX}/AsteroidaGraphica", f"{image_prefix}/AsteroidaGraphica.png", "December 2015", ["Software", "Games"]),
-        Project("Temper Fine", f"{GITHUB_PREFIX}/TemperFine", f"{image_prefix}/TemperFine.png", "February 2016", ["Software", "Games"]),
-        Project("agow", f"{GITHUB_PREFIX}/agow", f"{image_prefix}/Agow.png", "March 2017", ["Software", "Games"]),
-        Project("C# Adventure API", f"{GITHUB_PREFIX}/Adventure", f"{image_prefix}/AdventurePort.png", "October 2017", ["Software"])
-    ]
+    return render_template("games.html", projects=games_data.values())
 
-    return render_template("games.html", projects=games)
+image_prefix = '/static/projects/simulation-projects'
+simulations = {
+    "dpc": Project("DPC++ Experiments", f"{GITHUB_PREFIX}/DPC-experiments", f"{image_prefix}/DPCExperiments.png", 
+                   "February 2021", "...", ["Simulation", "Software"]),
+    "simulator": Project("Simulator", "simulation/simulator", f"{image_prefix}/Simulator.png",
+                    "April 2015", "May 2024", ["Simulation", "Software"]),
+    "flux": Project("Flux Sim", "SimulationProjects/FluxSim", f"{image_prefix}/FluxSim.png",
+                    "August 2014",  "...", ["Simulation", "Software"]),
+    "beam": Project("Beam Flow", "SimulationProjects/BeamFlow", f"{image_prefix}/BeamFlow.png",
+                    "December 2011",  "...", ["Simulation", "Software"]),
+    "vec": Project("Vector Flow", "SimulationProjects/VectorFlow", f"{image_prefix}/VectorFlow.png",
+                   "June 2010", "...", ["Simulation", "Software"]),
+    "field": Project("Field Simulator", "SimulationProjects/FieldSimulator", f"{image_prefix}/FieldSimulator.png",
+                     "January 2009", "...", ["Simulation", "Software" ])
+}
 
 @projects.route("/simulation")
 def simulation():
-    image_prefix = '/static/projects/simulation-projects'
-    simulations = [
-        Project("DPC++ Experiments", f"{GITHUB_PREFIX}/DPC-experiments", f"{image_prefix}/DPCExperiments.png", "February 2021", ["Simulation", "Software"]),
-        Project("Simulator", "simulation/simulator", f"{image_prefix}/Simulator.png", "April 2015", ["Simulation", "Software"]),
-        Project("Flux Sim", "SimulationProjects/FluxSim", f"{image_prefix}/FluxSim.png", "August 2014", ["Simulation", "Software"]),
-        Project("Beam Flow", "SimulationProjects/BeamFlow", f"{image_prefix}/BeamFlow.png", "December 2011", ["Simulation", "Software"]),
-        Project("Vector Flow", "SimulationProjects/VectorFlow", f"{image_prefix}/VectorFlow.png", "June 2010", ["Simulation", "Software"]),
-        Project("Field Simulator", "SimulationProjects/FieldSimulator", f"{image_prefix}/FieldSimulator.png", "January 2009", ["Simulation", "Software" ])
-    ]
-
-    return render_template("simulation.html", projects=simulations)
+    return render_template("simulation.html", projects=simulations.values())
 
 @projects.route("/simulation/<project>")
-def simulation_project(project):
-    return render_template(f"/simulation/{escape(project)}.html")
+def simulation_project(project: str):
+    lower_project = project.lower()
+    if lower_project in simulations:
+        return render_template(f"/simulation/{escape(project)}.html", project=simulations[lower_project])
+    else:
+        return render_template("errors/not_found.html")

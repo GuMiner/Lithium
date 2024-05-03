@@ -1,0 +1,11 @@
+<p>
+<div class="grid">
+  <div><b>{{ project.name }}</b> -- {{ project.date }}</div>
+  <div class="align-right">
+    {% for tag in project.tags %} {# There can be multiple tags, with the CSS specifier in lowercase #}
+    <span class="tag-{{tag.lower()}} align-right">{{ tag }}</span>
+    {% endfor %}
+    <span><small>Last Updated {{ project.updated }}</small></span>
+  </div>
+</div>
+</p>
