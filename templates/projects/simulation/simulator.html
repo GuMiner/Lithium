@@ -1,4 +1,5 @@
-{% extends '_base.html' %}
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
 
 {% block css %}
 <link rel="stylesheet" href="/static/math.css">
@@ -8,92 +9,83 @@
 {% include "_projects_header.html" %}
 {% include "_project_header.html" %}
 <p>
-    <h2>About</h2>
-    The <b>{{ project.name }}</b> project was started to answer a number of questions:
-    <ul>
-        <li>What is the difference between modern OpenGL and DirectX?</li>
-        <li>Can I make a time-dependend electromagnetic simulation?</li>
-        <li>How is a full-screen Windows Modern (Metro) Application different from a desktop OpenGL / DirectX application?</li>
-    </ul>
+  <h2>About</h2>
+  The <b>{{ project.name }}</b> project was started to answer a number of questions:
+  <ul>
+    <li>What is the difference between modern OpenGL and DirectX?</li>
+    <li>Can I make a time-dependend electromagnetic simulation?</li>
+    <li>How is a full-screen Windows Modern (Metro) Application different from a desktop OpenGL / DirectX application?</li>
+  </ul>
 </p>
 <p>
-    <h2>Mathematics</h2>
-    To test these technologies, I decided to simulate point particles.
-    <br />
-    With my previous simulator, I had used <i>Lorentz's Force Law</i> in combination with <i>Newton's Second
-    Law</i> to simulate particle motion, and roughly approximate the electric and magnetic fields from the
-    particle positions and velocities.
-    <blockquote class="align-center">
-        $$\vec{F}=q(\vec{E} + \vec{v}\times\vec{B})$$
-        <cite>Lorentz Force Law for a point charge in an electric and a magnetic field</cite>
-    </blockquote>
-    <blockquote class="align-center">
-        $$\vec{F}=m\vec{a}$$
-        <cite>Newton Second Law</cite>
-    </blockquote>
-    <blockquote class="align-center">
-        $$\vec{E(r)}=\frac{1}{4\pi\epsilon_0}\sum\limits_{i}\frac{q_i}{R^2}\hat{R}$$
-        <cite>The steady-state electric
-        field at \(r\) given \(\vec{R}\) <small>(the vector from a point charge to your point \(r\))</small> summed over
-        all particles.</cite>
-    </blockquote>
-    <blockquote class="align-center">
-        $$\vec{B(r)}=\frac{\mu_0}{4\pi}\sum\limits_{i}\frac{q_i\vec{v_i}\times\hat{R_i}}{R_i^2}$$
-        <cite>The steady-state magnetic field at \(r\) given \(\vec{R}\), summed over all particles.</cite>
-    </blockquote>
+  <h2>Mathematics</h2>
+  To test these technologies, I decided to simulate point particles.
+  <br />
+  With my previous simulator, I had used <i>Lorentz's Force Law</i> in combination with <i>Newton's Second
+  Law</i> to simulate particle motion, and roughly approximate the electric and magnetic fields from the
+  particle positions and velocities.
+  <blockquote class="align-center">
+    $$\vec{F}=q(\vec{E} + \vec{v}\times\vec{B})$$
+    <cite>Lorentz Force Law for a point charge in an electric and a magnetic field</cite>
+  </blockquote>
+  <blockquote class="align-center">
+    $$\vec{F}=m\vec{a}$$
+    <cite>Newton's Second Law</cite>
+  </blockquote>
+  <blockquote class="align-center">
+    $$\vec{E(r)}=\frac{1}{4\pi\epsilon_0}\sum\limits_{i}\frac{q_i}{R^2}\hat{R}$$
+    <cite>The steady-state electric field at \(r\) given \(\vec{R}\) <small>(the vector from a point charge to your point \(r\))</small> summed over all particles.</cite>
+  </blockquote>
+  <blockquote class="align-center">
+    $$\vec{B(r)}=\frac{\mu_0}{4\pi}\sum\limits_{i}\frac{q_i\vec{v_i}\times\hat{R_i}}{R_i^2}$$
+    <cite>The steady-state magnetic field at \(r\) given \(\vec{R}\), summed over all particles.</cite>
+  </blockquote>
 </p>
 <p>
-    However, these approximates above don't account for the time that it takes for changes in a particle's
-    position to be visible to other particles, because
-    information only travels at the speed of light. These approximate equations above are only correct for
-    non-relativistic, steady-state situations.
+  However, these approximates above don't account for the time that it takes for changes in a particle's position to be visible to other particles, because information only travels at the speed of light. These approximate equations above are only correct for non-relativistic, steady-state situations.
 </p>
 <p>
-    For this simulation, I used a (less approximate) equation from my E&M course
-    and stored the history of each particle's motion so that time effects could be properly considered. By
-    setting \(\vec{u}=c\hat{R}-\vec{v}\), the following equations were used:
+  For this simulation, I used a (less approximate) equation from my E&M course and stored the history of each particle's motion so that time effects could be properly considered. By setting \(\vec{u}=c\hat{R}-\vec{v}\), the following equations were used:
 </p>
 <blockquote class="align-center">
-    $$\vec{E(r,t)}=\frac{1}{4\pi\epsilon_0}\sum\limits_{i}\frac{q_iR_i}{(\vec{R_i}\cdot\vec{u_i})^3}((c^2-v_i^2)\vec{u_i}+\vec{R_i}\times(\vec{u_i}\times\vec{a_i}))$$
-    <cite>An updated electric field equation, but where the vector \(\vec{R}\) accounts for when the particle was given a
-        light speed delay</cite>
+  $$\vec{E(r,t)}=\frac{1}{4\pi\epsilon_0}\sum\limits_{i}\frac{q_iR_i}{(\vec{R_i}\cdot\vec{u_i})^3}((c^2-v_i^2)\vec{u_i}+\vec{R_i}\times(\vec{u_i}\times\vec{a_i}))$$
+  <cite>An updated electric field equation, but where the vector \(\vec{R}\) accounts for when the particle was given a light speed delay</cite>
 </blockquote>
 <blockquote class="align-center">
-    $$\vec{B(r,t)}=\frac{1}{c}\hat{R}\times\vec{E(r,t)})$$
-    <cite>An updated magnetic field equation, calculated using the updated electric field equation</cite>
+  $$\vec{B(r,t)}=\frac{1}{c}\hat{R}\times\vec{E(r,t)})$$
+  <cite>An updated magnetic field equation, calculated using the updated electric field equation</cite>
 </blockquote>
 <p>
-    I didn't add the <i>Abraham-Lorentz</i> force to these equations because the particles spontaneously accelerates when done so, with that level of detail also beyond my level of understanding.
+  I didn't add the <i>Abraham-Lorentz</i> force to these equations because the particles spontaneously accelerates when done so, with that level of detail also beyond my level of understanding.
 </p>
 <h2>Results</h2>
 <article>
-    <img src="../../static/projects/simulation-projects/em-simulator/Simulator.png" alt="All-in-one screenshot of two orbiting charged particles." />
-    <footer>All-in-one screenshot of two orbiting charged particles.</footer>
+  <img src="../../static/projects/simulation-projects/em-simulator/Simulator.png" alt="All-in-one screenshot of two orbiting charged particles."/>
+  <footer>All-in-one screenshot of two orbiting charged particles.</footer>
 </article>
 <p>
-    In terms of the software, this screenshot shows:
-    <ul>
-        <li>Geometry-shader generated arrows</li>
-        <li>The usage of both Direct2D and Direct3D to draw info text.</li>
-        <li>A fullscreen Windows Modern App</li>
-    </ul>
+  In terms of the software, this screenshot shows:
+  <ul>
+    <li>Geometry-shader generated arrows</li>
+    <li>The usage of both Direct2D and Direct3D to draw info text</li>
+    <li>A fullscreen Windows Modern App</li>
+  </ul>
 </p>
 <p>
-    In terms of the simulation, this screenshot also shows the electromagnetic waves being propagated over time,
-    as expected.
+  In terms of the simulation, this screenshot also shows the electromagnetic waves being propagated over time, as expected.
 </p>
 <p>
-    Surprisingly, I found programming in modern DirectX to be extremely similar to programming in modern OpenGL.
-    In both cases, you:
-    <ul>
-        <li>Load shaders</li>
-        <li>Setup the shader data format</li>
-        <li>Load a vertex buffer with triangles</li>
-        <li>Batch render through the shaders</li>
-    </ul>
-    Even the shading languages (HLSL/GLSL) are very much C-like, with minor differences.
-    Overall, if you know how to do vertex-array-based OpenGL or DirectX programming, you'll be able to
-    transition into using the other language very, very quickly.
+  Surprisingly, I found programming in modern DirectX to be extremely similar to programming in modern OpenGL.
+  In both cases, you:
+  <ul>
+    <li>Load shaders</li>
+    <li>Setup the shader data format</li>
+    <li>Load a vertex buffer with triangles</li>
+    <li>Batch render through the shaders</li>
+  </ul>
+  Even the shading languages (HLSL/GLSL) are very much C-like, with minor differences.
+  Overall, if you know how to do vertex-array-based OpenGL or DirectX programming, you'll be able to
+  transition into using the other language very, very quickly.
 </p>
 {% endblock content %}
 
