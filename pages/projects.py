@@ -17,10 +17,6 @@ class Project:
     tags: List[str]
 
 
-@projects.route("/")
-def index():
-    return render_template("projects.html")
-
 image_prefix = '/static/projects/game-projects'
 games_data = {
     "asteroida": Project("Asteroida Graphica", f"{GITHUB_PREFIX}/AsteroidaGraphica", f"{image_prefix}/AsteroidaGraphica.png",
@@ -32,10 +28,6 @@ games_data = {
     "adventure": Project("C# Adventure API", f"{GITHUB_PREFIX}/Adventure", f"{image_prefix}/AdventurePort.png",
                          "October 2017", "...", ["Software"])
 }
-
-@projects.route("/games")
-def games():
-    return render_template("games.html", projects=games_data.values())
 
 image_prefix = '/static/projects/simulation-projects'
 simulations = {
@@ -53,14 +45,78 @@ simulations = {
                      "January 2009", "May 2024", ["Simulation", "Software" ])
 }
 
+image_prefix = '/static/projects/hardware-projects'
+hardwares = {
+    "geiger": Project("DIY Geiger Counter", "hardware/geiger", f"{image_prefix}/GeigerCounter.png",
+        "November 2013", "...", ["Printer", "Electronics" ]),
+    "millboard": Project("Mill Board Electronics", "hardware/millboard", f"{image_prefix}/MillBoardElectronics.png",
+        "2015, 2, 1", "...", ["LaserMill", "Electronics" ]),
+
+    # Laser Cut
+    "chessboard": Project( "Laser-engraved chess board", "hardware/chessboard", f"{image_prefix}/laser-cut/ChessBoard.png",
+        "2015, 4, 1", "...", ["LaserMill", "Games" ]),
+    "descentmodels": Project( "Descent Laser Models", "hardware/descentmodels", f"{image_prefix}/laser-cut/DescentModels.png",
+        "2014, 8, 1", "...", ["LaserMill" ]),
+    "filamentholder": Project("Filament Holder", "hardware/filamentholder", f"{image_prefix}/laser-cut/FilamentHolder.png",
+        "2014, 7, 1", "...", ["LaserMill" ]),
+    "saturnvmodel": Project("Saturn V Model", "hardware/saturnvmodel", f"{image_prefix}/laser-cut/SaturnVModel.png",
+        "2014, 10, 1", "...", ["LaserMill" ]),
+    "spaceshuttlemodel": Project("Space Shuttle Model", "hardware/spaceshuttlemodel", f"{image_prefix}/laser-cut/SpaceShuttleModel.png",
+        "2014, 7, 1", "...", ["LaserMill" ]),
+    "wavegenerator": Project("Wave Generator", "hardware/wavegenerator", f"{image_prefix}/laser-cut/WaveGenerator.png",
+        "2014, 7, 1", "...", ["LaserMill" ]),
+
+    # 3D Printed
+    "printrbotabout": Project("About the Printrbot Jr", "hardware/printrbotabout", f"{image_prefix}/printing/PrintrbotAbout.png",
+        "2013, 7, 1", "...", ["Printer", "Electronics" ]),
+    "geturbine": Project("GE Turbine Model", "hardware/geturbine", f"{image_prefix}/printing/GETurbine.png",
+        "2016, 1, 1", "...", ["Printer" ]),
+    "n64logo": Project("Nintendo 64 Logo", "hardware/n64logo", f"{image_prefix}/printing/N64Logo.png",
+        "2016, 2, 1", "...", ["Printer" ]),
+    "gearholder": Project("Gear Holder", "hardware/gearholder", f"{image_prefix}/printing/GearHolder.png",
+        "2015, 12, 1", "...", ["Printer" ]),
+    "phoneholder": Project("Phone Holder", "hardware/phoneholder", f"{image_prefix}/printing/PhoneHolder.png",
+        "2016, 4, 1", "...", ["Printer" ]),
+
+    # 3D Printed - Cases
+    "galileocase": Project("Intel Galileo Gen 2 Case", "hardware/galileocase", f"{image_prefix}/printing/cases/GalileoCase.png",
+        "2014, 8, 1", "...", ["Printer" ]),
+    "nanocase": Project("Arduino Nano Case", "hardware/nanocase", f"{image_prefix}/printing/cases/NanoCase.png",
+        "2015, 11, 1", "...", ["Printer" ]),
+    "picase": Project("Raspberry Pi Case", "hardware/picase", f"{image_prefix}/printing/cases/PiCase.png",
+        "2015, 10, 1", "...", ["Printer" ]),
+    "utilitycases": Project( "Utility Cases", "hardware/utilitycases", f"{image_prefix}/printing/cases/UtilityCases.png",
+        "2014, 3, 1", "...",    ["Printer" ]),
+}
+
+### Project landing pages ###
+@projects.route("/")
+def index():
+    return render_template("projects.html")
+
+@projects.route("/games")
+def games():
+    return render_template("games.html", projects=games_data.values())
+
 @projects.route("/simulation")
 def simulation():
     return render_template("simulation.html", projects=simulations.values())
 
-@projects.route("/simulation/<project>")
-def simulation_project(project: str):
+@projects.route("/hardware")
+def hardware():
+    return render_template("hardware.html", projects=sorted(hardwares.values(), key=lambda hardware: hardware.date))
+
+def _lookup_project(category, project, projects: dict):
     lower_project = project.lower()
-    if lower_project in simulations and GITHUB_PREFIX not in simulations[lower_project].link:
-        return render_template(f"/simulation/{escape(project)}.html", project=simulations[lower_project])
+    if lower_project in projects and GITHUB_PREFIX not in projects[lower_project].link:
+        return render_template(f"/{category}/{escape(project)}.html", project=projects[lower_project])
     else:
         return render_template("errors/not_found.html")
+
+@projects.route("/simulation/<project>")
+def simulation_project(project: str):
+    return _lookup_project("simulation", project, simulations)
+
+@projects.route("/hardware/<project>")
+def hardware_project(project: str):
+    return _lookup_project("hardware", project, hardwares)
