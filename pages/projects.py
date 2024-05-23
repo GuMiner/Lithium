@@ -47,10 +47,10 @@ simulations = {
                     "August 2014",  "May 2024", ["Simulation", "Software"]),
     "beamflow": Project("Beam Flow", "simulation/beamflow", f"{image_prefix}/BeamFlow.png",
                     "December 2011",  "May 2024", ["Simulation", "Software"]),
-    "vec": Project("Vector Flow", "SimulationProjects/VectorFlow", f"{image_prefix}/VectorFlow.png",
-                   "June 2010", "...", ["Simulation", "Software"]),
-    "field": Project("Field Simulator", "SimulationProjects/FieldSimulator", f"{image_prefix}/FieldSimulator.png",
-                     "January 2009", "...", ["Simulation", "Software" ])
+    "vectorflow": Project("Vector Flow", "simulation/vectorflow", f"{image_prefix}/VectorFlow.png",
+                   "June 2010", "May 2024", ["Simulation", "Software"]),
+    "fieldsim": Project("Field Simulator", "simulation/fieldsim", f"{image_prefix}/FieldSimulator.png",
+                     "January 2009", "May 2024", ["Simulation", "Software" ])
 }
 
 @projects.route("/simulation")
