@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 
 class Mode(Enum):
-    Start = 1,
     Imports = 2,
     Content = 3,
 
@@ -48,9 +47,8 @@ def _generate_math(depth, short_line):
         f'{depth}</blockquote>'
     ]
 
-def _process_file(script_path, lines):
-    mode = Mode.Start
-    output_file = None
+def _process_file(script_path, output_file, lines):
+    mode = Mode.Imports
     output_lines = []
     output_lines += Snippets.base_header
 
@@ -58,11 +56,7 @@ def _process_file(script_path, lines):
     footer = []
 
     for line in lines:
-        if mode == Mode.Start:
-            # Figure out where the file will be stored
-            output_file = line
-            mode = Mode.Imports
-        elif mode == Mode.Imports:
+        if mode == Mode.Imports:
             # Add in any extra imports if required
             if 'math' in line:
                 output_lines += Snippets.math_css
@@ -146,7 +140,11 @@ if __name__ == "__main__":
     script_path = os.path.abspath(os.path.dirname(__file__))
     projects_path = os.path.join(script_path, 'projects')
 
-    for file in os.listdir(projects_path):
-        file_path = Path(os.path.join(projects_path, file))
-        lines = file_path.read_text().splitlines()
-        _process_file(script_path, lines)
+    for root, dirs, files in os.walk(projects_path):
+        for file in files:
+            file_path = Path(os.path.join(root, file))
+            lines = file_path.read_text().splitlines()
+
+            project_folder = root.replace(projects_path, '')
+            project_name = file.replace('.md', '')
+            _process_file(script_path, f'{project_folder}/{project_name}', lines)

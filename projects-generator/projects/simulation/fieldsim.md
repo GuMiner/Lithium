@@ -1,4 +1,3 @@
-simulation/fieldsim
 none
 ## About
 {} <b>{{ project.name }}</b> simulates simple static electric and gravitational fields, graphing the results in 2D and 3D.

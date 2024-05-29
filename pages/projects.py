@@ -50,44 +50,57 @@ hardwares = {
     "geiger": Project("DIY Geiger Counter", "hardware/geiger", f"{image_prefix}/GeigerCounter.png",
         "November 2013", "...", ["Printer", "Electronics" ]),
     "millboard": Project("Mill Board Electronics", "hardware/millboard", f"{image_prefix}/MillBoardElectronics.png",
-        "2015, 2, 1", "...", ["LaserMill", "Electronics" ]),
+        "February 2015", "...", ["LaserMill", "Electronics" ]),
 
     # Laser Cut
     "chessboard": Project( "Laser-engraved chess board", "hardware/chessboard", f"{image_prefix}/laser-cut/ChessBoard.png",
-        "2015, 4, 1", "...", ["LaserMill", "Games" ]),
+        "April 2015", "...", ["LaserMill", "Games" ]),
     "descentmodels": Project( "Descent Laser Models", "hardware/descentmodels", f"{image_prefix}/laser-cut/DescentModels.png",
-        "2014, 8, 1", "...", ["LaserMill" ]),
+        "August 2014", "...", ["LaserMill" ]),
     "filamentholder": Project("Filament Holder", "hardware/filamentholder", f"{image_prefix}/laser-cut/FilamentHolder.png",
-        "2014, 7, 1", "...", ["LaserMill" ]),
+        "July 2014", "...", ["LaserMill" ]),
     "saturnvmodel": Project("Saturn V Model", "hardware/saturnvmodel", f"{image_prefix}/laser-cut/SaturnVModel.png",
-        "2014, 10, 1", "...", ["LaserMill" ]),
+        "October 2014", "...", ["LaserMill" ]),
     "spaceshuttlemodel": Project("Space Shuttle Model", "hardware/spaceshuttlemodel", f"{image_prefix}/laser-cut/SpaceShuttleModel.png",
-        "2014, 7, 1", "...", ["LaserMill" ]),
+        "July 2014", "...", ["LaserMill" ]),
     "wavegenerator": Project("Wave Generator", "hardware/wavegenerator", f"{image_prefix}/laser-cut/WaveGenerator.png",
-        "2014, 7, 1", "...", ["LaserMill" ]),
+        "July 2014", "...", ["LaserMill" ]),
 
     # 3D Printed
     "printrbotabout": Project("About the Printrbot Jr", "hardware/printrbotabout", f"{image_prefix}/printing/PrintrbotAbout.png",
-        "2013, 7, 1", "...", ["Printer", "Electronics" ]),
+        "July 2013", "...", ["Printer", "Electronics" ]),
     "geturbine": Project("GE Turbine Model", "hardware/geturbine", f"{image_prefix}/printing/GETurbine.png",
-        "2016, 1, 1", "...", ["Printer" ]),
+        "January 2016", "...", ["Printer" ]),
     "n64logo": Project("Nintendo 64 Logo", "hardware/n64logo", f"{image_prefix}/printing/N64Logo.png",
-        "2016, 2, 1", "...", ["Printer" ]),
+        "February 2016", "...", ["Printer" ]),
     "gearholder": Project("Gear Holder", "hardware/gearholder", f"{image_prefix}/printing/GearHolder.png",
-        "2015, 12, 1", "...", ["Printer" ]),
+        "December 2015", "...", ["Printer" ]),
     "phoneholder": Project("Phone Holder", "hardware/phoneholder", f"{image_prefix}/printing/PhoneHolder.png",
-        "2016, 4, 1", "...", ["Printer" ]),
+        "April 2016", "May 2024", ["Printer" ]),
 
     # 3D Printed - Cases
     "galileocase": Project("Intel Galileo Gen 2 Case", "hardware/galileocase", f"{image_prefix}/printing/cases/GalileoCase.png",
-        "2014, 8, 1", "...", ["Printer" ]),
+        "August 2014", "...", ["Printer" ]),
     "nanocase": Project("Arduino Nano Case", "hardware/nanocase", f"{image_prefix}/printing/cases/NanoCase.png",
-        "2015, 11, 1", "...", ["Printer" ]),
+        "November 2015", "...", ["Printer" ]),
     "picase": Project("Raspberry Pi Case", "hardware/picase", f"{image_prefix}/printing/cases/PiCase.png",
-        "2015, 10, 1", "...", ["Printer" ]),
+        "October 2015", "...", ["Printer" ]),
     "utilitycases": Project( "Utility Cases", "hardware/utilitycases", f"{image_prefix}/printing/cases/UtilityCases.png",
-        "2014, 3, 1", "...",    ["Printer" ]),
+        "March 2014", "...",    ["Printer" ]),
 }
+
+def _get_sortable_date(date: str):
+    parts = date.split(" ")
+    expanded_year = int(parts[1]) * 10
+    
+    # Month lookup. There probably is a more Pythonic way of doing this.
+    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    for i in range(0, len(months)):
+        if parts[0] == months[i]:
+            # Add the month to the year (and negate) for descending sorting
+            return -(expanded_year + i)
+    
+    raise Exception(f"Month not found: {date}")
 
 ### Project landing pages ###
 @projects.route("/")
@@ -104,7 +117,7 @@ def simulation():
 
 @projects.route("/hardware")
 def hardware():
-    return render_template("hardware.html", projects=sorted(hardwares.values(), key=lambda hardware: hardware.date))
+    return render_template("hardware.html", projects=sorted(hardwares.values(), key=lambda hardware: _get_sortable_date(hardware.date)))
 
 def _lookup_project(category, project, projects: dict):
     lower_project = project.lower()
