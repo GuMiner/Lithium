@@ -1,0 +1,49 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<h2>About</h2>
+<div class="grid">
+  <div>
+    <p>
+      Available from <a href="http://www.thingiverse.com/thing:392115">Thingiverse</a>, this print was a mechanical parts test.
+    </p>
+    <p>
+      While this model required a significant amount of time (and sanding), the turbine is able to freely spin on the two bearings attached to the frame.
+    </p>
+  </div>
+  <article>
+    <img src="../../static/projects/hardware-projects/printing/ge-turbine/turbine.jpg" alt="GE Turbine Model, assembled."/>
+    <footer>GE Turbine Model, assembled.</footer>
+  </article>
+</div>
+<div class="grid">
+  <article>
+    <img src="../../static/projects/hardware-projects/printing/ge-turbine/turbine_gears.jpg" alt="Gearing closeup, top-down view"/>
+    <footer>Gearing closeup, top-down view</footer>
+  </article>
+  <article>
+    <img src="../../static/projects/hardware-projects/printing/ge-turbine/turbine_gears2.jpg" alt="Gearing closeup, inline view"/>
+    <footer>Gearing closeup, inline view</footer>
+  </article>
+</div>
+
+<h2>Challenges</h2>
+<div class="grid">
+  <div>
+    <p>
+      With the poor printing tolerances in my inexpensive 3D printer, each gear needed sanding for proper alignment. Each gear nicely aligned with each other once sanding was complete.
+    </p>
+    <p>
+      In addition to that difficulty, the slicer software would generate extreme vibration about halfway through the print, as it attempted to trace out imperceptively thin vanes of the main fan.
+    </p>
+    <p>
+    </div>
+    <article>
+      <img src="../../static/projects/hardware-projects/printing/ge-turbine/turbine_main_gear.jpg" alt="Main turbine cutaway"/>
+      <footer>Main turbine cutaway</footer>
+    </article>
+  </div>
+{% endblock content %}

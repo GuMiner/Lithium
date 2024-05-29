@@ -70,11 +70,11 @@ hardwares = {
     "printrbotabout": Project("About the Printrbot Jr", "hardware/printrbotabout", f"{image_prefix}/printing/PrintrbotAbout.png",
         "July 2013", "...", ["Printer", "Electronics" ]),
     "geturbine": Project("GE Turbine Model", "hardware/geturbine", f"{image_prefix}/printing/GETurbine.png",
-        "January 2016", "...", ["Printer" ]),
+        "January 2016", "May 2024", ["Printer" ]),
     "n64logo": Project("Nintendo 64 Logo", "hardware/n64logo", f"{image_prefix}/printing/N64Logo.png",
-        "February 2016", "...", ["Printer" ]),
+        "February 2016", "May 2024", ["Printer" ]),
     "gearholder": Project("Gear Holder", "hardware/gearholder", f"{image_prefix}/printing/GearHolder.png",
-        "December 2015", "...", ["Printer" ]),
+        "December 2015", "May 2024", ["Printer" ]),
     "phoneholder": Project("Phone Holder", "hardware/phoneholder", f"{image_prefix}/printing/PhoneHolder.png",
         "April 2016", "May 2024", ["Printer" ]),
 
@@ -91,7 +91,7 @@ hardwares = {
 
 def _get_sortable_date(date: str):
     parts = date.split(" ")
-    expanded_year = int(parts[1]) * 10
+    expanded_year = int(parts[1]) * 100
     
     # Month lookup. There probably is a more Pythonic way of doing this.
     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
