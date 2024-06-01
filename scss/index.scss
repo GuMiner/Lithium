@@ -48,6 +48,7 @@ base-tag {
   border-style: solid;
   border-width: 2px;
   border-color: #bababa;
+  color: #000;
   border-radius: 6px;
   margin: 3px;
   padding: 3px;
@@ -67,6 +68,21 @@ base-tag {
 .tag-software {
   @extend base-tag;
   background: lightblue;
+}
+
+.tag-lasermill {
+  @extend base-tag;
+  background: lightcoral;
+}
+
+.tag-printer {
+  @extend base-tag;
+  background: chartreuse;
+}
+
+.tag-electronics {
+  @extend base-tag;
+  background: olivedrab;
 }
 
 .no-grid-wrap {

@@ -102,6 +102,8 @@ def _process_file(script_path, output_file, lines):
                 depth = depth[:-2]
                 output_lines += [f'{depth}</p>']
             # Headers
+            elif short_line.startswith('### '):
+                output_lines += [f'{depth}<h3>{short_line[3:]}</h3>']
             elif short_line.startswith('## '):
                 output_lines += [f'{depth}<h2>{short_line[3:]}</h2>']
             # Images
