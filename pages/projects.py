@@ -82,9 +82,9 @@ hardwares = {
     "galileocase": Project("Intel Galileo Gen 2 Case", "hardware/galileocase", f"{image_prefix}/printing/cases/GalileoCase.png",
         "August 2014", "...", ["Printer" ]),
     "nanocase": Project("Arduino Nano Case", "hardware/nanocase", f"{image_prefix}/printing/cases/NanoCase.png",
-        "November 2015", "...", ["Printer" ]),
+        "November 2015", "June 2024", ["Printer" ]),
     "picase": Project("Raspberry Pi Case", "hardware/picase", f"{image_prefix}/printing/cases/PiCase.png",
-        "October 2015", "...", ["Printer" ]),
+        "October 2015", "June 2024", ["Printer" ]),
     "utilitycases": Project( "Utility Cases", "hardware/utilitycases", f"{image_prefix}/printing/cases/UtilityCases.png",
         "March 2014", "...",    ["Printer" ]),
 }

@@ -6,7 +6,7 @@
 {% include "_project_header.html" %}
 <p>
   <h2>About</h2>
-  <div class="grid">
+  <div class="grid fit-content">
     <div>
       <p>
         <b>{{ project.name }}</b> is a thermal simulation program I wrote to test the <a href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> matrix math library and the <a href="http://www.sfml-dev.org/">SFML</a> graphics library.
@@ -18,28 +18,34 @@
         The physics and mathematical infrastructure for this program were derived from <a href="https://books.google.com/books/about/Nuclear_heat_transport.html?id=97UjAAAAMAAJ">Nuclear Heat Transport</a> by <i>M. M. El-Wakil</i>
       </p>
     </div>
-    <article>
-      <img src="../../static/projects/simulation-projects/flux-sim/FluxSim1.png" alt="Partially-equalized random thermal distribution"/>
-      <footer>Partially-equalized random thermal distribution</footer>
-    </article>
+    <div class="grid max-content-height">
+      <article>
+        <img src="../../static/projects/simulation-projects/flux-sim/FluxSim1.png" alt="Partially-equalized random thermal distribution"/>
+        <footer>Partially-equalized random thermal distribution</footer>
+      </article>
+    </div>
   </div>
 </p>
 <p>
   <h2>Capabilities</h2>
-  <div class="grid">
-    <article>
-      <img src="../../static/projects/simulation-projects/flux-sim/FluxSim2.png" alt="Substantially-equalized random thermal distribution"/>
-      <footer>Substantially-equalized random thermal distribution</footer>
-    </article>
-    <article>
-      <img src="../../static/projects/simulation-projects/flux-sim/FluxSim3.png" alt="Heat flow from a cold aluminum rectangle to hot walls"/>
-      <footer>Heat flow from a cold aluminum rectangle to hot walls</footer>
-    </article>
+  <div class="grid fit-content">
+    <div class="grid max-content-height">
+      <article>
+        <img src="../../static/projects/simulation-projects/flux-sim/FluxSim2.png" alt="Substantially-equalized random thermal distribution"/>
+        <footer>Substantially-equalized random thermal distribution</footer>
+      </article>
+    </div>
+    <div class="grid max-content-height">
+      <article>
+        <img src="../../static/projects/simulation-projects/flux-sim/FluxSim3.png" alt="Heat flow from a cold aluminum rectangle to hot walls"/>
+        <footer>Heat flow from a cold aluminum rectangle to hot walls</footer>
+      </article>
+    </div>
   </div>
   This application accurately simulates the thermal transport over time within a piece of aluminum, although other materials can be added with material files which specify the material heat capacity at different temperatures.
 </p>
 <p>
-  <div class="grid">
+  <div class="grid fit-content">
     <div>
       <p>
         Because this application simply simulates a massive 2D grid as a matrix, it was easy to add support for insulated points and fixed-temperature points.
@@ -48,10 +54,12 @@
         Simulating additional geometry, while certainly possible, has not been experimented with.
       </p>
     </div>
-    <article>
-      <img src="../../static/projects/simulation-projects/flux-sim/FluxSim4.png" alt="Fixed-temperature points, evenly distributed throughout the simulation grid"/>
-      <footer>Fixed-temperature points, evenly distributed throughout the simulation grid</footer>
-    </article>
+    <div class="grid max-content-height">
+      <article>
+        <img src="../../static/projects/simulation-projects/flux-sim/FluxSim4.png" alt="Fixed-temperature points, evenly distributed throughout the simulation grid"/>
+        <footer>Fixed-temperature points, evenly distributed throughout the simulation grid</footer>
+      </article>
+    </div>
   </div>
 </p>
 <h2>Software</h2>

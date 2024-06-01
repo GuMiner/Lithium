@@ -32,10 +32,12 @@ class Snippets:
 def _generate_image(depth, short_line):
     parts = short_line[1:].split('~', 1)
     return [
-        f'{depth}<article>',
-        f'{depth}  <img src="../../static/projects/{parts[0]}" alt="{parts[1]}"/>',
-        f'{depth}  <footer>{parts[1]}</footer>',
-        f'{depth}</article>'
+        f'{depth}<div class="grid max-content-height">',
+        f'{depth}  <article>',
+        f'{depth}    <img src="../../static/projects/{parts[0]}" alt="{parts[1]}"/>',
+        f'{depth}    <footer>{parts[1]}</footer>',
+        f'{depth}  </article>',
+        f'{depth}</div>'
     ]
 
 def _generate_math(depth, short_line):
@@ -67,6 +69,15 @@ def _process_file(script_path, output_file, lines):
             mode = Mode.Content
         elif mode == Mode.Content:
             short_line = line.strip()
+            # for rule in rules:
+            #     if rule.is_match(line):
+            #         if rule.depth < 0:
+            #             depth=depth[:rule.depth]
+            #         
+            #         
+            #         if rule.depth > 0:
+            #             depth += (' ' * rule.depth)
+
             # Basic paragraph content
             if short_line.startswith('{} '):
                 output_lines += [
@@ -76,7 +87,7 @@ def _process_file(script_path, output_file, lines):
             # Divs/Grids
             elif short_line.startswith('['):
                 if short_line.startswith('[g'):
-                    output_lines += [f'{depth}<div class="grid">']
+                    output_lines += [f'{depth}<div class="grid fit-content">']
                 else:
                     output_lines += [f'{depth}<div>']
                 depth += '  '

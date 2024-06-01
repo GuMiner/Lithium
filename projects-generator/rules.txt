@@ -1,0 +1,10 @@
+# Match | Replacement | Depth adjustment (optional)
+
+# Blocks and grids
+[g|<div class="grid fit-content">|2
+[|<div>
+]|</div>|-2
+
+# Paragraphs
+{|<p>|2
+}|</p>|-2

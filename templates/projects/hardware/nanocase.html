@@ -1,0 +1,25 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/printing/cases/Nano/nano_case.jpg" alt="Arduino Nano slide-on case"/>
+      <footer>Arduino Nano slide-on case</footer>
+    </article>
+  </div>
+  <div>
+    This nifty little case slides on tightly, with:
+    <ul>
+      <li>A recessed slot for the USB interface on the back</li>
+      <li>A slot to access the interface pins (lower-right)</li>
+      <li>A slot to see the status LEDs</li>
+      <li>A cutout for the programming pins</li>
+    </ul>
+  </div>
+</div>
+The Arduino Nano was previously used to run <a href="https://github.com/gnea/grbl">GRBL</a> to control a CNC engraver / mini-mill.
+{% endblock content %}

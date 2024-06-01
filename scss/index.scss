@@ -73,6 +73,16 @@ base-tag {
   grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
 }
 
+@media (min-width: 768px) {
+  .fit-content {
+      grid-template-columns: repeat(auto-fit, minmax(0%, max-content));
+  }
+}
+
+.max-content-height {
+  grid-template-rows: max-content auto;
+}
+
 .project-image-card {
   width: 352px; // 320 px + 2x16px borders = 352px;
   display: inline-block; // For auto-wrapping
