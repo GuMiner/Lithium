@@ -24,6 +24,9 @@ async function getInitializedHavok() {
       });
 }
 
+var canvasDiv = null;
+var globalEngine: Engine = null;
+
 class App {
     make_blocks(scene: Scene, shadowGenerator: ShadowGenerator) {
         const woodMaterial = new StandardMaterial("Wood", scene);
@@ -96,6 +99,8 @@ class App {
     async createSceneAsync(engine: Engine, canvas) {
         // initialize babylon scene and engine
         var scene = new Scene(engine);
+        scene.autoClear = false;
+        scene.autoClearDepthAndStencil = false;
 
         var gravityVector = new Vector3(0, -9.81, 0);
         var physicsPlugin = new HavokPlugin(true, await getInitializedHavok());
@@ -133,13 +138,16 @@ class App {
 
     constructor() {
         // Game screen
+        canvasDiv = document.createElement("div");
         var canvas = document.createElement("canvas");
         canvas.style.width = "100%";
         canvas.style.height = "100%";
         canvas.id = "gameCanvas";
-        document.body.appendChild(canvas);
+        canvasDiv.appendChild(canvas);
+        document.body.appendChild(canvasDiv);
 
-        var engine = new Engine(canvas, true);
+        var engine = new Engine(canvas, true, null, true);
+        globalEngine = engine;
 
         this.createSceneAsync(engine, canvas).then((scene) => {
             window.addEventListener("keydown", (ev) => {
@@ -219,6 +227,7 @@ class App {
             // })
 
             // run the main render loop
+            
             engine.runRenderLoop(() => {
                 scene.render();
             });
@@ -226,7 +235,20 @@ class App {
     }
 }
 
-window.onload = (event) =>
+function enterFullscreen() {
+    // Fullscreen requests can only be made if triggered by a user.
+    // As such, we need to do this call in a function triggered by a button press.
+    // canvasDiv.requestFullscreen();
+    globalEngine.switchFullscreen(false);
+    globalEngine.resize(true);
+}
+
+(window as any).enterFullscreen = enterFullscreen;
+window.addEventListener('load', () =>
 {
     new App();
-};
+});
+
+window.addEventListener("resize", () => {
+    globalEngine.resize(true);
+});
