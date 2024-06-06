@@ -1,15 +1,20 @@
 import datetime
 from werkzeug import exceptions
 from flask import Flask, render_template, request, g
+from flask_socketio import SocketIO, emit
 from flask_compress import Compress
-from pages import projects, puzzles
+from pages import projects, puzzles, games
 
 # TODO -- move move of this into separate files.
 import sqlite3
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = {'UNUSED'}
+socketio = SocketIO(app)
+
 Compress(app)
 app.register_blueprint(projects.projects)
+app.register_blueprint(games.games)
 
 # Used by all pages for the ©️ text.
 @app.context_processor
@@ -67,10 +72,12 @@ def puzzles_word_query():
     postfix = f'</textarea><small>{len(words)}{limitText}</small>'
     return prefix + '\n'.join(words) + postfix
 
-@app.route("/game")
-def game_page():
-    return render_template("game.html")
+@socketio.on('block-sync')
+def sync(message):
+    print(message)
+    emit('sync-result', {'data': message + ': Received'})
+    
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app)
     

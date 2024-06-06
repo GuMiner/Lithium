@@ -2,6 +2,7 @@
 // Required for the debug viewer, otherwise not referenced
 import "@babylonjs/core/Debug";
 import "@babylonjs/inspector";
+import { io } from "socket.io-client";
 
 //import "@babylonjs/loaders/glTF";
 import { Engine, Scene,
@@ -18,8 +19,9 @@ async function getInitializedHavok() {
     return await HavokPhysics({
         locateFile: (path) => {
           // Hack because the Havok embeded WASM is weird and doesn't build properly.
+          // Ensure it is located via an absolute path
           console.log(`Updating Havok path to live in static: ${path}`);
-          return `static/game/${path}`;
+          return `/static/game/${path}`;
         }
       });
 }
@@ -32,7 +34,7 @@ class App {
         const woodMaterial = new StandardMaterial("Wood", scene);
         woodMaterial.specularColor = new Color3(0.8, 0.8, 0.8);
 
-        let woodTexture = new Texture('static/game/wood.jpg', scene);
+        let woodTexture = new Texture('/static/game/wood.jpg', scene);
         woodMaterial.diffuseTexture = woodTexture;
 
         var blockLength: float = 10;
@@ -82,7 +84,7 @@ class App {
         const groundMaterial = new StandardMaterial("Ground Material", scene);
         ground.material = groundMaterial;
 
-        let groundTexture = new Texture('static/game/checkerboard_basecolor.png', scene);
+        let groundTexture = new Texture('/static/game/checkerboard_basecolor.png', scene);
         groundMaterial.diffuseColor = new Color3(0.7, 0, 0);
         groundMaterial.diffuseTexture = groundTexture;
 
@@ -130,7 +132,7 @@ class App {
         this.make_blocks(scene, shadowGenerator);
         this.make_ground(scene);
 
-        var skyboxTexture = new CubeTexture("static/game/skybox/TropicalSunnyDay", scene);
+        var skyboxTexture = new CubeTexture("/static/game/skybox/TropicalSunnyDay", scene);
         scene.createDefaultSkybox(skyboxTexture, false, 700);
 
         return scene;
@@ -138,13 +140,12 @@ class App {
 
     constructor() {
         // Game screen
-        canvasDiv = document.createElement("div");
+        canvasDiv = document.getElementById("canvasDiv");
         var canvas = document.createElement("canvas");
         canvas.style.width = "100%";
         canvas.style.height = "100%";
         canvas.id = "gameCanvas";
         canvasDiv.appendChild(canvas);
-        document.body.appendChild(canvasDiv);
 
         var engine = new Engine(canvas, true, null, true);
         globalEngine = engine;
@@ -252,3 +253,23 @@ window.addEventListener('load', () =>
 window.addEventListener("resize", () => {
     globalEngine.resize(true);
 });
+
+
+// Add a test websocket
+const socket = io();
+socket.on("connect", () => {
+    console.log(socket.id);
+});
+
+socket.on('sync-result', (data) => {
+    console.log(`Reveived: {data.data}`);
+    document.getElementById('testLog').innerHTML += `<br/>${data.data}`
+});
+
+document.getElementById('testForm').onsubmit = e => {
+    e.preventDefault();
+    var input = (document.getElementById('testText') as HTMLInputElement).value;
+    console.log(`In ${input}`);
+    socket.emit('block-sync', input);
+    (document.getElementById('testText') as HTMLInputElement).value = '';
+}

@@ -17,6 +17,7 @@ python -m venv .venv
 pip install Flask
 pip install Flask-Assets
 pip install Flask-Compress
+pip install Flask-SocketIO
 pip install watchdog
 pip install cssmin
 pip install jsmin
