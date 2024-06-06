@@ -1,0 +1,103 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<h2>About</h2>
+<div class="grid fit-content">
+  <div>
+    <p>
+      How to make your own Geiger counter:
+    </p>
+    <ul>
+      <li>Purchase a kit from <a href="https://sites.google.com/site/diygeigercounter/home">DIYGeigerCounter</a></li>
+      <li>Purchase a geiger counter tube from <a href="http://www.goldmine-elec-products.com/">Electronic Goldmine</a></li>
+      <li>Assemble the electronics</li>
+      <li>Put it in a case, such as mine on <a href="https://www.thingiverse.com/thing:191113">Thingiverse</a> or your own</li>
+      <li>Test it with a uranium-glazed pottery piece from <a href="https://www.ebay.com/">Ebay</a></li>
+    </ul>
+    <div class="grid max-content-height">
+      <article>
+        <img src="../../static/projects/hardware-projects/geiger-counter/geiger_side.jpg" alt="Side view of the geiger-counter, without the lid on"/>
+        <footer>Side view of the geiger-counter, without the lid on</footer>
+      </article>
+    </div>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/geiger-counter/geiger_top.jpg" alt="The Geiger counter, in operation"/>
+      <footer>The Geiger counter, in operation</footer>
+    </article>
+  </div>
+</div>
+<p>
+  This case stores 6-AA's, the main electronics, the geiger-counter tube (as a snap-on component), and various interactive components, such as the power switch (left side) and brightness control (right side).
+</p>
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/geiger-counter/electronics.jpg" alt="Geiger counter electronics, without the case"/>
+      <footer>Geiger counter electronics, without the case</footer>
+    </article>
+  </div>
+</div>
+<h2>Case Design</h2>
+<p>
+  This was one of the first useful projects I designed and printed with my 3D printer. As such, the design was partly squished because I had to fit the entire case design within the build plate of my 3D printer.
+</p>
+<p>
+  This design is also quite dated, but is still functional.
+</p>
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/geiger-counter/wire_base.png" alt="Geiger Counter base (wireframe)"/>
+      <footer>Geiger Counter base (wireframe)</footer>
+    </article>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/geiger-counter/render_base.png" alt="Geiger Counter base (render)"/>
+      <footer>Geiger Counter base (render)</footer>
+    </article>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/geiger-counter/wire_lid.png" alt="Geiger Counter lid (wireframe)"/>
+      <footer>Geiger Counter lid (wireframe)</footer>
+    </article>
+  </div>
+</div>
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/geiger-counter/render_lid.png" alt="Geiger Counter lid (render)"/>
+      <footer>Geiger Counter lid (render)</footer>
+    </article>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/geiger-counter/wire_tube.png" alt="Geiger Counter tube holder (wireframe)"/>
+      <footer>Geiger Counter tube holder (wireframe)</footer>
+    </article>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/geiger-counter/render_tube.png" alt="Geiger Counter tube holder (render)"/>
+      <footer>Geiger Counter tube holder (render)</footer>
+    </article>
+  </div>
+</div>
+<p>
+   These models were designed using <a href="http://brlcad.org/">BRL-CAD</a>, which gave me a scripting interface to create the models along with a graphical output view. With this design:
+</p>
+<ul>
+  <li>The geiger counter base separates the battery storage from the electronics compartment</li>
+  <li>The geiger counter lid u-pipe holds the geiger counter tube as a snap-in item</li>
+  <li>The geiger counter tube holder has several holes, permitting charged particles to pass through</li>
+</ul>
+<p>
+  There are certainly several enhancements I'd make if I were recreating this design (or printing it in bulk), but overall the entire design worked as expected.
+</p>
+{% endblock content %}

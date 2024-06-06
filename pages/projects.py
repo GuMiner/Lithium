@@ -48,7 +48,7 @@ simulations = {
 image_prefix = '/static/projects/hardware-projects'
 hardwares = {
     "geiger": Project("DIY Geiger Counter", "hardware/geiger", f"{image_prefix}/GeigerCounter.png",
-        "November 2013", "...", ["Printer", "Electronics" ]),
+        "November 2013", "June 2024", ["Printer", "Electronics" ]),
     "millboard": Project("Mill Board Electronics", "hardware/millboard", f"{image_prefix}/MillBoardElectronics.png",
         "February 2015", "June 2024", ["LaserMill", "Electronics" ]),
 
@@ -58,17 +58,17 @@ hardwares = {
     "descentmodels": Project( "Descent Laser Models", "hardware/descentmodels", f"{image_prefix}/laser-cut/DescentModels.png",
         "August 2014", "June 2024", ["LaserMill" ]),
     "filamentholder": Project("Filament Holder", "hardware/filamentholder", f"{image_prefix}/laser-cut/FilamentHolder.png",
-        "July 2014", "...", ["LaserMill" ]),
+        "July 2014", "June 2024", ["LaserMill" ]),
     "saturnvmodel": Project("Saturn V Model", "hardware/saturnvmodel", f"{image_prefix}/laser-cut/SaturnVModel.png",
         "October 2014", "June 2024", ["LaserMill" ]),
     "spaceshuttlemodel": Project("Space Shuttle Model", "hardware/spaceshuttlemodel", f"{image_prefix}/laser-cut/SpaceShuttleModel.png",
-        "July 2014", "...", ["LaserMill" ]),
+        "July 2014", "June 2024", ["LaserMill" ]),
     "wavegenerator": Project("Wave Generator", "hardware/wavegenerator", f"{image_prefix}/laser-cut/WaveGenerator.png",
-        "July 2014", "...", ["LaserMill" ]),
+        "July 2014", "June 2024", ["LaserMill" ]),
 
     # 3D Printed
     "printrbotabout": Project("About the Printrbot Jr", "hardware/printrbotabout", f"{image_prefix}/printing/PrintrbotAbout.png",
-        "July 2013", "...", ["Printer", "Electronics" ]),
+        "July 2013", "June 2024", ["Printer", "Electronics" ]),
     "geturbine": Project("GE Turbine Model", "hardware/geturbine", f"{image_prefix}/printing/GETurbine.png",
         "January 2016", "May 2024", ["Printer" ]),
     "n64logo": Project("Nintendo 64 Logo", "hardware/n64logo", f"{image_prefix}/printing/N64Logo.png",
@@ -80,13 +80,13 @@ hardwares = {
 
     # 3D Printed - Cases
     "galileocase": Project("Intel Galileo Gen 2 Case", "hardware/galileocase", f"{image_prefix}/printing/cases/GalileoCase.png",
-        "August 2014", "...", ["Printer" ]),
+        "August 2014", "June 2024", ["Printer" ]),
     "nanocase": Project("Arduino Nano Case", "hardware/nanocase", f"{image_prefix}/printing/cases/NanoCase.png",
         "November 2015", "June 2024", ["Printer" ]),
     "picase": Project("Raspberry Pi Case", "hardware/picase", f"{image_prefix}/printing/cases/PiCase.png",
         "October 2015", "June 2024", ["Printer" ]),
     "utilitycases": Project( "Utility Cases", "hardware/utilitycases", f"{image_prefix}/printing/cases/UtilityCases.png",
-        "March 2014", "...",    ["Printer" ]),
+        "March 2014", "June 2024",  ["Printer" ]),
 }
 
 def _get_sortable_date(date: str):

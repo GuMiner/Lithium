@@ -1,0 +1,31 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<div class="grid fit-content">
+  <div>
+    <p>
+      While experimenting with <a href="http://www.123dapp.com/make">Autodesk 123D Make</a> (alternate download <a href="https://autodesk-123d-make.en.lo4d.com/windows">link</a>), I discovered simple support for slicing models to generate laser-cut plans. This functionality makes it really, really easy to take a 3D model and generate plans for a physical realization of those plans.
+    </p>
+    <p>
+      With this program, I converted the <a href="http://nasa3d.arc.nasa.gov/detail/sts">Space Shuttle Model</a> from <a href="http://www.nasa.gov/">NASA</a> to a series of plans, which I then laser-cut.
+    </p>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/laser-cut/filament-holder/laser_plans.png" alt="The laser cut plans for the space shuttle, along with other plans."/>
+      <footer>The laser cut plans for the space shuttle, along with other plans.</footer>
+    </article>
+  </div>
+</div>
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/hardware-projects/laser-cut/space-shuttle-model/space_shuttle.jpg" alt="The laser-cut Space Shuttle model"/>
+      <footer>The laser-cut Space Shuttle model</footer>
+    </article>
+  </div>
+</div>
+{% endblock content %}
