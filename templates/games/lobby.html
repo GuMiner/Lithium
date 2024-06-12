@@ -1,0 +1,16 @@
+{% extends '_base.html' %}
+
+{% block content %}
+{% include "_games_header.html" %}
+<div id="currentClients"></div>
+<div id="testLog">
+</div>
+<form id="testForm">
+    <label for="testText">I:</label>
+    <input type="text" id="testText">
+</form>
+{% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript" src="/static/lobby.js"></script>
+{% endblock scripts %}

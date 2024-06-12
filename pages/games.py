@@ -4,5 +4,12 @@ games = Blueprint('games', __name__, url_prefix='/games', template_folder='../te
 
 @games.route("/")
 def index():
+    return render_template("games/games.html")
+
+@games.route("/blocks")
+def blocks():
     return render_template("blocks.html")
 
+@games.route("/lobby")
+def lobby():
+    return render_template("lobby.html")

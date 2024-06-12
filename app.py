@@ -76,7 +76,11 @@ def puzzles_word_query():
 def sync(message):
     print(message)
     emit('sync-result', {'data': message + ': Received'})
-    
+
+# Lobby socketio functions
+@socketio.on('client-update')
+def update_clients(message):
+    emit('current-clients', { 'clients': ['a', 'b', 'c', datetime.datetime.now().second]})
 
 if __name__ == "__main__":
     socketio.run(app)

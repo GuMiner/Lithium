@@ -169,3 +169,5 @@ db/*
 static/aboutme/*
 static/projects/*
 static/fonts/*
+
+secure.conf

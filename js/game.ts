@@ -2,7 +2,6 @@
 // Required for the debug viewer, otherwise not referenced
 import "@babylonjs/core/Debug";
 import "@babylonjs/inspector";
-import { io } from "socket.io-client";
 
 //import "@babylonjs/loaders/glTF";
 import { Engine, Scene,
@@ -253,23 +252,3 @@ window.addEventListener('load', () =>
 window.addEventListener("resize", () => {
     globalEngine.resize(true);
 });
-
-
-// Add a test websocket
-const socket = io();
-socket.on("connect", () => {
-    console.log(socket.id);
-});
-
-socket.on('sync-result', (data) => {
-    console.log(`Reveived: {data.data}`);
-    document.getElementById('testLog').innerHTML += `<br/>${data.data}`
-});
-
-document.getElementById('testForm').onsubmit = e => {
-    e.preventDefault();
-    var input = (document.getElementById('testText') as HTMLInputElement).value;
-    console.log(`In ${input}`);
-    socket.emit('block-sync', input);
-    (document.getElementById('testText') as HTMLInputElement).value = '';
-}

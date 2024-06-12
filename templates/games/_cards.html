@@ -1,0 +1,16 @@
+{# A shorter version of the project card for the games list #}
+<div class="container" style="text-align: center;">
+    {% for game in games %}
+    <article class="project-image-card align-left">
+      <a href="{{ game.link }}" class="relative-position">
+        <img src="{{ game.image }}" alt="{{ game.name }} example" />
+      </a>
+      <footer>
+        <div class="grid no-grid-wrap">
+          <a href="{{ game.link }}">{{ game.name }}</a>
+        </div>
+      </footer>
+    </article>
+    {% endfor %}
+  </div>
+  
