@@ -21,8 +21,11 @@
         <ul>
           <li><button type="button" id="themeToggle" onclick="toggleTheme()">- Mode</button></li>
           <li><a class="nav-border" href="{{ url_for('projects.index') }}">Projects</a></li>
-          <li><a class="nav-border" href="{{ url_for('puzzles_page') }}">Puzzles</a></li>
-          <li><a class="nav-border" href="{{ url_for('games.index')}}">Games  </a></li>
+          <li></li>
+          <li><a class="nav-border" href="{{ url_for('puzzles_page') }}">Puzzle Tools</a></li>
+          <li><a class="nav-border" href="{{ url_for('games.index')}}">Games</a></li>
+          <li></li>
+          <li><a class="nav-border" href="{{ url_for('recommendations.index')}}">Recommendations</a></li>
         </ul>
       </nav>
       {% block content %}

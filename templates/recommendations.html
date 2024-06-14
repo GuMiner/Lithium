@@ -1,0 +1,45 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h1>Recommendations</h1>
+<p>
+    At some point in time, I've found these tools or websites useful.
+</p>
+<p>
+    This page is perpetually <b>🚧Under Construction🚧</b>, with new links added from time to time.
+</p>
+<p>
+    See also the <a href="{{ url_for('recommendations.attributions') }}">Attributions</a> page for more recommendations there.
+</p>
+{% for referenceSet in referenceSets %}
+<div class="grid project-image-card" style="vertical-align: top;">
+    <div>
+    {% for referenceGroup in referenceSet.referenceGroups %}
+        <div class="align-center">
+            <b>{{ referenceGroup.title }}</b>
+        </div>
+        <article>
+            <ul>
+                {% for reference in referenceGroup.references %}
+                    <li>
+                        {{ reference.name }}
+                        <br/>
+                        <a href="{{ reference.link }}">{{ reference.link }}</a>
+                        {% if reference.moreDetails %}
+                            <ul><li>{{ reference.moreDetails }} -- <a href="{{ reference.moreDetailsLink }}">Link</a></li></ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="align-center">
+                <small><i>Last Updated {{ referenceGroup.lastUpdated }}</i></small>
+            </div>
+        </article>
+    {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

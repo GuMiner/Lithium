@@ -103,7 +103,7 @@ def _get_sortable_date(date: str):
     raise Exception(f"Month not found: {date}")
 
 ### Project landing pages ###
-@projects.route("/")
+@projects.route("")
 def index():
     return render_template("projects.html")
 

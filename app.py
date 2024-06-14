@@ -3,9 +3,9 @@ from werkzeug import exceptions
 from flask import Flask, render_template, request, g
 from flask_socketio import SocketIO, emit
 from flask_compress import Compress
-from pages import projects, puzzles, games
+from pages import projects, puzzles, games, recommendations
 
-# TODO -- move move of this into separate files.
+# TODO -- move most of this into separate files.
 import sqlite3
 
 app = Flask(__name__)
@@ -15,6 +15,7 @@ socketio = SocketIO(app)
 Compress(app)
 app.register_blueprint(projects.projects)
 app.register_blueprint(games.games)
+app.register_blueprint(recommendations.recommendations)
 
 # Used by all pages for the ©️ text.
 @app.context_processor
