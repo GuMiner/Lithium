@@ -85,6 +85,16 @@ base-tag {
   background: olivedrab;
 }
 
+.tag-hardware {
+  @extend base-tag;
+  background: darkorange;
+}
+
+.tag-mobile {
+  @extend base-tag;
+  background-color: lightgray;
+}
+
 .no-grid-wrap {
   grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
 }

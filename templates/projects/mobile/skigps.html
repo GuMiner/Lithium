@@ -1,0 +1,41 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<p>
+  <h2>About</h2>
+  <p>
+    <b>{{ project.name }}</b> is an educational simulation-based presentation software, which I wrote for the UW - Madison NEST competition.
+  </p>
+  <p>
+    This program was a larger success than I thought -- I placed in the 3<sup>rd</sup> annual UW-Madison CS <a href="https://contest.cs.wisc.edu/past/2011-12-Winners.pdf">competition</a> (alternate <a href="../../static/projects/simulation-projects/beam-flow/BeamFlowWinners.pdf">link</a>)
+  </p>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/simulation-projects/beam-flow/Gravity.png" alt="A simulation of a 3D gravitational field between the sun and the earth<br/><small>(not to scale)</small>"/>
+      <footer>A simulation of a 3D gravitational field between the sun and the earth<br/><small>(not to scale)</small></footer>
+    </article>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/simulation-projects/beam-flow/Scripting.png" alt="Scripting a presentation, using a mini scripting language to define visualizations"/>
+      <footer>Scripting a presentation, using a mini scripting language to define visualizations</footer>
+    </article>
+  </div>
+  <div class="grid fit-content">
+    <div class="grid max-content-height">
+      <article>
+        <img src="../../static/projects/simulation-projects/beam-flow/magnet.png" alt="A simple slide demonstrating how magnets work"/>
+        <footer>A simple slide demonstrating how magnets work</footer>
+      </article>
+    </div>
+    <div class="grid max-content-height">
+      <article>
+        <img src="../../static/projects/simulation-projects/beam-flow/MagneticWire.png" alt="A simple slide with moving particles around a bent current-carrying wire"/>
+        <footer>A simple slide with moving particles around a bent current-carrying wire</footer>
+      </article>
+    </div>
+  </div>
+{% endblock content %}
