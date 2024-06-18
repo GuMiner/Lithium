@@ -101,23 +101,23 @@ mobiles = {
     "SuperTag": Project("SuperTag", f"{GITHUB_PREFIX}/SuperTag", f"{image_prefix}/SuperTag.png",
         "March 2021", "...", ["Software", "Electronics", "Mobile" ]),
     "cncmillsoftware": Project("Pro CNC 3020 Software", "/projects/mobile/cncmillsoftware", f"{image_prefix}/CncMillSoftware.png",
-        "May 2015", "...", ["LaserMill", "Software", "Mobile" ]),
+        "May 2015", "June 2024", ["LaserMill", "Software", "Mobile" ]),
     "skigps": Project("Ski GPS Traces", "/projects/mobile/skigps", f"{image_prefix}/SkiGpsTraces.png",
-        "January 2019", "...", ["Software", "Mobile" ]),
+        "January 2019", "June 2024", ["Software", "Mobile" ]),
     # Windows Mobile
     "algorithmassistant": Project("Algorithm Assistant", "/projects/mobile/algorithmassistant", f"{image_prefix}/AlgorithmAssistant.png",
-        "December 2013", "...", ["Mobile", "Software" ]),
+        "December 2013", "June 2024", ["Mobile", "Software" ]),
     "specialistscalculator": Project("Specialists Calculator", "/projects/mobile/specialistscalculator", f"{image_prefix}/SpecialistsCalculator.png",
-        "August 2014", "...", ["Mobile", "Software" ]),
+        "August 2014", "June 2024", ["Mobile", "Software" ]),
      # PDA projects
      "draftingprogram": Project("iPAQ PDA Drafting Program", "/projects/mobile/draftingprogram", f"{image_prefix}/pda/DraftingProgram.png",
         "January 2011", "...", ["Mobile", "Software" ]),
      "fractalviewer": Project("iPAQ PDA Fractal Viewer", "/projects/mobile/fractalviewer", f"{image_prefix}/pda/FractalViewer.png",
-        "March 2011", "...", ["Mobile", "Software" ]),
+        "March 2011", "June 2024", ["Mobile", "Software" ]),
      "lissajouscurves": Project("iPAQ PDA Lissajous Curves", "/projects/mobile/lissajouscurves", f"{image_prefix}/pda/LissajousCurves.png",
         "August 2010", "...", ["Mobile", "Software" ]),
      "particlecollider": Project("iPAQ PDA Particle Collider", "/projects/mobile/particlecollider", f"{image_prefix}/pda/ParticleCollider.png",
-        "July 2011", "...", ["Mobile", "Software" ]),
+        "July 2011", "June 2024", ["Mobile", "Software" ]),
 }
 
 def _get_sortable_date(date: str):

@@ -1,0 +1,50 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<h2>About</h2>
+<div class="grid fit-content">
+  <div>
+    <p>
+      <b>{{ project.name }}</b> was a small mobile application to describe, demonstrate, and visualize algorithms.
+    </p>
+    <p>
+      At the time, this project was written for the Windows Phone. This software is no longer available now that that store is shut down.
+    </p>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/algorithm-assistant/aa1.png" alt="A screenshot of the O(n²)<br /> Gnome sort algorithm"/>
+      <footer>A screenshot of the O(n²)<br /> Gnome sort algorithm</footer>
+    </article>
+  </div>
+</div>
+
+<div class="grid fit-content">
+  <div>
+    <p>
+      The main algorithms included in the demo program were searching and sorting algorithms.
+    </p>
+    <p>
+      A few miscellaneous physics and math-based algorithms were also added for additional visualization.
+    </p>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/algorithm-assistant/aa2.png" alt="A visualization of the Julia Set fractal"/>
+      <footer>A visualization of the Julia Set fractal</footer>
+    </article>
+  </div>
+</div>
+
+<h2>Unique Aspects</h2>
+<p>
+  This phone application is structured so that once a visualization type is defined, it was very easy to create new algorithms that use the same visualization type.
+</p>
+<blockquote>For example, most of the <b>Sorting</b> visualizations feature a bar-graph sort view.</blockquote>
+<p>
+  I also tried to polish this to be an 'official' phone application, so this application included support for landscape orientation, transition animations, and was partly-localized to additional languages.
+</p>
+{% endblock content %}

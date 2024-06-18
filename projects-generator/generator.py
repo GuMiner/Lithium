@@ -29,12 +29,13 @@ class Snippets:
         '{% include "_projects_header.html" %}',
         '{% include "_project_header.html" %}']
 
-def _generate_image(depth, short_line):
+def _generate_image(depth, short_line: str):
     parts = short_line[1:].split('~', 1)
+    alt_text = parts[1].replace('"', "&quot;")
     return [
         f'{depth}<div class="grid max-content-height">',
         f'{depth}  <article>',
-        f'{depth}    <img src="../../static/projects/{parts[0]}" alt="{parts[1]}"/>',
+        f'{depth}    <img src="../../static/projects/{parts[0]}" alt="{alt_text}"/>',
         f'{depth}    <footer>{parts[1]}</footer>',
         f'{depth}  </article>',
         f'{depth}</div>'

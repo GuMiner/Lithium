@@ -1,0 +1,30 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<div class="grid fit-content">
+  <p>
+    <b>{{ project.name }}</b> was a small mobile application to simulate particle orbits around gravity/electromagnetic sources and sinks.
+  </p>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/pda/particle-collider/particleCollider1.png" alt="Particles without traces"/>
+      <footer>Particles without traces</footer>
+    </article>
+  </div>
+</div>
+
+<div class="grid fit-content">
+  <p>
+    The main focus of this program was to see how effectively the PDA could compute particle orbits while rendering them simultaneously.
+  </p>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/pda/particle-collider/particleCollider2.png" alt="Particles with traces"/>
+      <footer>Particles with traces</footer>
+    </article>
+  </div>
+</div>
+{% endblock content %}

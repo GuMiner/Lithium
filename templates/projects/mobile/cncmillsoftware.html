@@ -1,0 +1,88 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<h2>About</h2>
+After attempting to build CNC milling hardware, I decided to instead purchase a 3020-aluminum based CNC engraver.
+This relatively-inexpensive device was sufficiently sturdy to repurpose as a low-end mill, for soft materials.
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/cnc-mill-software/Mill.jpg" alt="Pro CNC 3020 4-axis mill"/>
+      <footer>Pro CNC 3020 4-axis mill</footer>
+    </article>
+  </div>
+</div>
+<h2>Precision</h2>
+<p>
+  I found the hardware overall to be fairly sturdy, with stepper motors driving lead screws to move the x, y, and z axis.
+  Each stepper motor micro-step moves each axis 0.00254 mm (2.54 µm) -- which probably means this device was designed around Imperial standards,
+  because that nicely translates to 0.1 mils (1000 mils = 1 inch) per micro-step. By default, each stepper motor runs at 16x micro stepping,
+  with 1600 steps per axis revolution.
+</p>
+<p>
+  In practice, this device isn't nearly that accurate, but it's nice to see the limitation is not in the control hardware.
+</p>
+
+<h2>Software</h2>
+The software that came with the device required both Windows XP and a Parallel port.
+Having neither, I decided to write my own using the microcontrollers I had on hand.
+
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/cnc-mill-software/MillMisspelling.jpg" alt="Parallel port was misspelled as parakkel port too."/>
+      <footer>Parallel port was misspelled as parakkel port too.</footer>
+    </article>
+  </div>
+</div>
+
+With those microcontrollers, I wrote the following:
+
+<div class="grid fit-content">
+  <b>Version 1:</b> This initial software verified that I could drive the mill, at a pitifully slow speed.
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/cnc-mill-software/V1Results.jpg" alt="Netduino (C#)"/>
+      <footer>Netduino (C#)</footer>
+    </article>
+  </div>
+</div>
+
+<div class="grid fit-content">
+  <b>Version 2:</b> This software worked excellently -- until the Raspberry PI had software interrupts which caused stuttering.
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/cnc-mill-software/V2Results.jpg" alt="Raspberry PI (C)"/>
+      <footer>Raspberry PI (C)</footer>
+    </article>
+  </div>
+</div>
+
+<p>
+  <b>Version 3:</b> I tried writing code for the <a href="https://www.parallax.com/propeller/">Parallax Propeller</a>, which was even <i>slower</i> than the Netduino -- too slow to be usable.
+</p>
+
+<div class="grid fit-content">
+  <p>
+    <b>Version 4:</b> I stopped trying to reinvent the wheel and bought an Arduino Nano and installed <a href="https://github.com/grbl/grbl/wiki">GRBL</a> on it.
+    <br/> <br/>
+    Unfortunately, the Arduino Nano is significantly more sensitive to voltage transients when running the mill spindle. I have to run the mill at a slow feedrate and spindle rate to avoid resetting the device due to electrical noise
+    <br/> <br/>
+    However, I was able to run at a reasonable rate, unlike the Netduinio, Parallax Propeller, or Raspberry PI.
+  </p>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/cnc-mill-software/V4Results.jpg" alt="Arduino Nano (GRBL)"/>
+      <footer>Arduino Nano (GRBL)</footer>
+    </article>
+  </div>
+</div>
+
+<h2>Epilogue</h2>
+<p>
+  Due to the difficulties in using the device (and difficulty in transporting it), I sold it a few years later, focusing my attention elsewhere.
+</p>
+{% endblock content %}

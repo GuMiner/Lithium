@@ -4,38 +4,32 @@
 {% block content %}
 {% include "_projects_header.html" %}
 {% include "_project_header.html" %}
+<h2>About</h2>
 <p>
-  <h2>About</h2>
-  <p>
-    <b>{{ project.name }}</b> is an educational simulation-based presentation software, which I wrote for the UW - Madison NEST competition.
-  </p>
-  <p>
-    This program was a larger success than I thought -- I placed in the 3<sup>rd</sup> annual UW-Madison CS <a href="https://contest.cs.wisc.edu/past/2011-12-Winners.pdf">competition</a> (alternate <a href="../../static/projects/simulation-projects/beam-flow/BeamFlowWinners.pdf">link</a>)
-  </p>
+  <b>{{ project.name }}</b> focused on how to capture ski performance data and render it from downhill ski resorts.
+</p>
+<div class="grid fit-content">
   <div class="grid max-content-height">
     <article>
-      <img src="../../static/projects/simulation-projects/beam-flow/Gravity.png" alt="A simulation of a 3D gravitational field between the sun and the earth<br/><small>(not to scale)</small>"/>
-      <footer>A simulation of a 3D gravitational field between the sun and the earth<br/><small>(not to scale)</small></footer>
+      <img src="../../static/projects/mobile-projects/ski-gps/GoogleEarthTraces.png" alt="Ski runs overlaid on Google Earth from <a href=&quot;https://www.whistlerblackcomb.com/&quot;>Whistler Blackcomb</a> ski resort"/>
+      <footer>Ski runs overlaid on Google Earth from <a href="https://www.whistlerblackcomb.com/">Whistler Blackcomb</a> ski resort</footer>
     </article>
   </div>
+</div>
+
+<h2>Process</h2>
+<ul>
+  <li>Acquire GPS trace data from ski runs. Several different smartwatches, such as those used for <a href="https://github.com/GuMiner/garmin-simple-clarity">SimpleClarity</a>, can be used.</li>
+  <li>Export the data in GPX format</li>
+  <li>Import the data into <a href="http://www.gpstrackeditor.com/">GPS Track Editor</a></li>
+  <li>Delete incorrect traces, such as lift lines, and break apart each run into separate tracks.</li>
   <div class="grid max-content-height">
     <article>
-      <img src="../../static/projects/simulation-projects/beam-flow/Scripting.png" alt="Scripting a presentation, using a mini scripting language to define visualizations"/>
-      <footer>Scripting a presentation, using a mini scripting language to define visualizations</footer>
+      <img src="../../static/projects/mobile-projects/ski-gps/GpsTrackEditorTraces.png" alt="Ski runs in the GPS Track Editor application"/>
+      <footer>Ski runs in the GPS Track Editor application</footer>
     </article>
   </div>
-  <div class="grid fit-content">
-    <div class="grid max-content-height">
-      <article>
-        <img src="../../static/projects/simulation-projects/beam-flow/magnet.png" alt="A simple slide demonstrating how magnets work"/>
-        <footer>A simple slide demonstrating how magnets work</footer>
-      </article>
-    </div>
-    <div class="grid max-content-height">
-      <article>
-        <img src="../../static/projects/simulation-projects/beam-flow/MagneticWire.png" alt="A simple slide with moving particles around a bent current-carrying wire"/>
-        <footer>A simple slide with moving particles around a bent current-carrying wire</footer>
-      </article>
-    </div>
-  </div>
+  <li>Export the data as GPX format</li>
+  <li>Import the data into <a href="https://earth.google.com/">Google Earth</a> and display as desired!</li>
+</ul>
 {% endblock content %}
