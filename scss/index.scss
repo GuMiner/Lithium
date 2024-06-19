@@ -44,6 +44,15 @@
   margin-left: 6px;
 }
 
+// Border for broader areas
+.expandable-border {
+  border-style: solid dashed solid dashed;
+  border-width: 2px;
+  border-color: #494b52;
+  border-radius: 6px;
+  padding: 3px 6px 3px 6px;
+}
+
 base-tag {
   border-style: solid;
   border-width: 2px;

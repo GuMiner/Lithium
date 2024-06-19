@@ -42,7 +42,7 @@
     </div>
   </div>
 </details>
-<details open>
+<details open class="expandable-border">
   <summary>Word Search</summary>
   <div class="grid">
     <div>
@@ -74,7 +74,74 @@
     </form>
   </div>
 </details>
-<details open>
+<details open class="expandable-border">
+  <summary>Crossword Search</summary>
+  <div class="grid">
+    <div>
+      <form>
+        <fieldset>
+          Query:
+          <input id="crosswordQuery" type="text" name="crosswordQuery" placeholder="" aria-label="InputQuery"
+            hx-post="/puzzles/crossword" hx-trigger="keyup delay:125ms changed"
+            hx-target="next #foundCrossword" />
+        </fieldset>
+      </form>
+    </div>
+    <form autocomplete="off">
+      <fieldset>
+        <label>
+          Output
+          <div id="foundCrossword">
+            <textarea readonly>
+            </textarea>
+          </div>
+        </label>
+      </fieldset>
+    </form>
+  </div>
+</details>
+<details class="expandable-border">
+  <summary>Thesaurus / Homophones</summary>
+  <div class="grid">
+    <div>
+      <form>
+        <fieldset>
+          Query:
+          <input id="wordExtraQuery" type="text" name="wordExtraQuery" placeholder="" aria-label="InputQuery"
+            hx-post="/puzzles/wordsExtra" hx-trigger="keyup delay:125ms changed"
+            hx-include="next #thesaurusRadio" hx-include="next #homophonesRadio"
+            hx-target="next #foundExtraWords" />
+            <label>
+              <input id="thesaurusRadio" type="radio" name="extraChoice"
+                    hx-post="/puzzles/wordsExtra"
+                    hx-include="previous #wordExtraQuery" hx-include="next #homophonesRadio"
+                    hx-target="next #foundExtraWords" checked value="Thesaurus" />
+              Thesaurus
+            </label>
+            <label>
+              <input id="homophonesRadio" type="radio" name="extraChoice"
+                    hx-post="/puzzles/wordsExtra"
+                    hx-include="previous #wordExtraQuery" hx-include="previous #wordExtraQuery"
+                    hx-target="next #foundExtraWords" value="Homophones" />
+              Homophones
+            </label>
+        </fieldset>
+      </form>
+    </div>
+    <form autocomplete="off">
+      <fieldset>
+        <label>
+          Output
+          <div id="foundExtraWords">
+            <textarea readonly>
+            </textarea>
+          </div>
+        </label>
+      </fieldset>
+    </form>
+  </div>
+</details>
+<details open class="expandable-border">
   <summary>Number Conversion</summary>
   <div class="grid">
     <form autocomplete="off">
@@ -105,5 +172,31 @@
 
     </div>
   </div>
+</details>
+<details class="expandable-border">
+  <summary>Useful Links</summary>
+   {# Same structure as used on the Recommendations page #}
+  {% for referenceSet in references %}
+  <div class="grid project-image-card" style="vertical-align: top;">
+      <div>
+      {% for reference in referenceSet %}
+          <div class="align-center">
+              <b>{{ reference.title }}</b>
+          </div>
+          <article>
+              <ul>
+                  {% for link in reference.links %}
+                      <li>
+                          {{ link.name }}
+                          <br/>
+                          <a href="{{ link.link }}">{{ link.link }}</a>
+                      </li>
+                  {% endfor %}
+              </ul>
+          </article>
+      {% endfor %}
+      </div>
+  </div>
+  {% endfor %}
 </details>
 {% endblock content %}
