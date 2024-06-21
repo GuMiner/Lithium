@@ -22,6 +22,7 @@ def close_connection(exception):
 def _get_word_query():
     return "SELECT word from words WHERE word LIKE ? ORDER BY word LIMIT ?"
 
+# TODO -- update DB to support a simpler query
 def _get_thesaurus_query():
     return """SELECT T.word, L.synonymList
 FROM thesaurus T
@@ -29,6 +30,12 @@ JOIN thesaurus_lookup L
 ON SUBSTR(T.synonymIds, 0, INSTR(T.synonymIds, ',')) = L.id
 WHERE word LIKE ? ORDER BY word LIMIT ?
 """
+
+def _get_crossword_question_query():
+    return "SELECT clue || ' ⩥ ' || answer FROM crosswords WHERE clue LIKE ? ORDER BY clue LIMIT ?"
+
+def _get_crossword_answer_query():
+    return "SELECT clue || ' ⩥ ' || answer FROM crosswords WHERE answer LIKE ? ORDER BY answer LIMIT ?"
 
 def _get_homophones_query():
     return "SELECT homophones FROM homophones WHERE UPPER(homophones) LIKE ? ORDER BY homophones LIMIT ?"
@@ -120,7 +127,10 @@ def puzzles_crossword_querty():
     answers = [word[0] for word in _get_puzzle_db()
             .execute(_get_crossword_answer_query(), [query, limit])]
 
-    return _generate_textarea("foundCrossword", words, limit)
+    questions_block = _generate_textarea("questions", questions, limit)
+    answers_block = _generate_textarea("answers", answers, limit)
+    return f'<fieldset id="foundCrossword"><label>Clues{questions_block}</label>' + \
+        f'<label>Answers{answers_block}</label></fieldset>'
 
 @puzzles.route("/wordsExtra", methods=['POST'])
 def puzzles_extra_query():
