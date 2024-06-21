@@ -197,29 +197,29 @@
     </form>
     <div>
       <input id="inputDelimiterSubst" type="text" name="delimiter" placeholder="(Delimiter: space)" aria-label="Delimiter"
-        oninput="convertSubstituteNumbers()" />
+        onchange="convertSubstituteNumbers()" />
       Enable A (1) to Z (26) Conversion
       <input id="AZConvertSubst" type="checkbox" name="az" aria-label="A1-Z26-Enable"
-        oninput="convertSubstituteNumbers()" checked />
+      onchange="convertSubstituteNumbers()" checked />
       <br/>
       Enable Rotation conversion
       <input id="rotateSubst" type="checkbox" name="rot" aria-label="ROT-Enable"
-        oninput="convertSubstituteNumbers()" checked />
+      onchange="convertSubstituteNumbers()" checked />
       <input id="rotateAmount" type="number" name="base" placeholder="(Rotate by: 13)" aria-label="ROT-Amount"
-        oninput="convertSubstituteNumbers()" />
+      onchange="convertSubstituteNumbers()" />
       Enable number to ASCII Conversion
       <input id="ASCIIConvertSubst" type="checkbox" name="ascii" aria-label=ASCII-Enable"
-        oninput="convertSubstituteNumbers()" checked />
+      onchange="convertSubstituteNumbers()" checked />
       <br/>
       Enable Morse code conversion
       <input id="MorseConvertSubst" type="checkbox" name="morse" aria-label=Morse-Enable"
-        oninput="convertSubstituteNumbers()" checked />
+      onchange="convertSubstituteNumbers()" checked />
       <br/>
       <div class="grid">
         <input id="MorseDot" type="text" name="morseDot" placeholder="Morse Dot: ." aria-label="Delimiter"
-        oninput="convertSubstituteNumbers()" />
+        onchange="convertSubstituteNumbers()" />
         <input id="MorseDash" type="text" name="morseDash" placeholder="Morse Dash: -" aria-label="Delimiter"
-        oninput="convertSubstituteNumbers()" />
+        onchange="convertSubstituteNumbers()" />
       </div>
     </div>
   </div>
