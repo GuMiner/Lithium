@@ -151,7 +151,7 @@ def index():
 
 @projects.route("/games")
 def games():
-    return render_template("games.html", projects=games_data.values())
+    return render_template("games_projects.html", projects=games_data.values())
 
 @projects.route("/simulation")
 def simulation():

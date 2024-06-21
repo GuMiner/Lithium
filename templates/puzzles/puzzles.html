@@ -7,13 +7,13 @@
     <div>
       <h4>Navigation</h4>
       <p>
-        Use the buttons at the top to open and collapse data tabs.
+        Click on tabs to expand and collapse them.
         <br />
         Data will remain in each tab if it is collapsed, but will be discarded if the page is refreshed.
       </p>
       <h4>Searching</h4>
       <p>
-        All searches support SQL queries. Use a '_' for letters which must exist and a '%' as a wildcard.
+        All searches support limited SQL wildcards. Use a '_' for letters which must exist and a '%' as a wildcard.
         <br />
         <i>Examples</i>
       <ul>
@@ -28,16 +28,15 @@
       <h4>About</h4>
       <p>
         These puzzle tools are built on top several technologies. <br />
-        The underlying website runs on a Flask server with ... for UI, ... <br />
-        sqlite3 provides SQL database support, with Axios simplifying the interactions between Typescript and Web API.
-        <br />
-        Finally, ...
+        For more information on those technologies, see the <a href="{{ url_for('recommendations.attributions') }}">attributions page</a>
       </p>
 
       <h4>Support</h5>
         <p>
-          For all support issues, please file an issue on the <a href="https://github.com/guminer/psr/issues">issue
+          For all support issues, please file an issue on this website's <a href="https://github.com/guminer/lithium/issues">issue
             tracker page</a>.
+            <blockquote>
+              Thank you very much for helping fix this site 🔧⚙️!</blockquote>
         </p>
     </div>
   </div>
@@ -74,7 +73,7 @@
     </form>
   </div>
 </details>
-<details open class="expandable-border">
+<details class="expandable-border">
   <summary>Crossword Search</summary>
   <div class="grid">
     <div>
@@ -172,7 +171,56 @@
       Delimiter
       <input id="inputDelimiter" type="text" name="delimiter" placeholder="(space)" aria-label="Delimiter"
         oninput="convertNumbers()" />
-
+    </div>
+  </div>
+</details>
+<details open class="expandable-border">
+  <summary>Substitution Codes</summary>
+  <div class="grid">
+    <form autocomplete="off">
+      <fieldset>
+        <label>
+          Input
+          <input id="numbersToConvertSubst" type="text" name="numberInput" placeholder="Enter numbers here"
+            aria-label="InputNumbers" oninput="convertSubstituteNumbers()" />
+        </label>
+      </fieldset>
+    </form>
+    <form autocomplete="off">
+      <fieldset>
+        <label>
+          Output
+          <textarea id="convertedNumbersSubst" readonly>
+          </textarea>
+        </label>
+      </fieldset>
+    </form>
+    <div>
+      <input id="inputDelimiterSubst" type="text" name="delimiter" placeholder="(Delimiter: space)" aria-label="Delimiter"
+        oninput="convertSubstituteNumbers()" />
+      Enable A (1) to Z (26) Conversion
+      <input id="AZConvertSubst" type="checkbox" name="az" aria-label="A1-Z26-Enable"
+        oninput="convertSubstituteNumbers()" checked />
+      <br/>
+      Enable Rotation conversion
+      <input id="rotateSubst" type="checkbox" name="rot" aria-label="ROT-Enable"
+        oninput="convertSubstituteNumbers()" checked />
+      <input id="rotateAmount" type="number" name="base" placeholder="(Rotate by: 13)" aria-label="ROT-Amount"
+        oninput="convertSubstituteNumbers()" />
+      Enable number to ASCII Conversion
+      <input id="ASCIIConvertSubst" type="checkbox" name="ascii" aria-label=ASCII-Enable"
+        oninput="convertSubstituteNumbers()" checked />
+      <br/>
+      Enable Morse code conversion
+      <input id="MorseConvertSubst" type="checkbox" name="morse" aria-label=Morse-Enable"
+        oninput="convertSubstituteNumbers()" checked />
+      <br/>
+      <div class="grid">
+        <input id="MorseDot" type="text" name="morseDot" placeholder="Morse Dot: ." aria-label="Delimiter"
+        oninput="convertSubstituteNumbers()" />
+        <input id="MorseDash" type="text" name="morseDash" placeholder="Morse Dash: -" aria-label="Delimiter"
+        oninput="convertSubstituteNumbers()" />
+      </div>
     </div>
   </div>
 </details>

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List
 from flask import Blueprint, render_template
 
-recommendations = Blueprint('recommendations', __name__, url_prefix='/recommendations', template_folder='../templates')
+recommendations = Blueprint('recommendations', __name__, url_prefix='/recommendations', template_folder='../templates/recommendations')
 
 @dataclass
 class Reference:
@@ -147,7 +147,7 @@ referenceSets = [
     ])
 ]
 
-@recommendations.route("")
+@recommendations.route("/")
 def index():
     return render_template("recommendations.html", referenceSets=referenceSets)
 
@@ -155,22 +155,24 @@ def index():
 class Attribution:
     name: str
     link: str
+    details: str
 
 attributionSet = {
     "javaScript": [
-        Attribution("BabylonJS", "https://www.babylonjs.com/"),
-        Attribution("esbuild", "https://esbuild.github.io/"),
-        Attribution("htmx", "https://htmx.org/"),
-        Attribution("Pico CSS", "https://picocss.com/"),
-        Attribution("sass", "https://sass-lang.com/"),
-        Attribution("Socket.IO", "https://socket.io/"),
-        Attribution("TypeScript", "https://www.typescriptlang.org/"),
+        Attribution("BabylonJS", "https://www.babylonjs.com/", "3D WebGL graphics"),
+        Attribution("esbuild", "https://esbuild.github.io/", "JavaScript bundling & minification"),
+        Attribution("htmx", "https://htmx.org/", "Client/Server HTML attribute-based"),
+        Attribution("Pico CSS", "https://picocss.com/", "Small CSS styling library"),
+        Attribution("sass", "https://sass-lang.com/", "CSS extension language to more easily generate CSS"),
+        Attribution("Socket.IO", "https://socket.io/", "Client/Server realtime communication"),
+        Attribution("TypeScript", "https://www.typescriptlang.org/", "Language built on JavaScript to more easily generate JavaScript"),
     ],
     "python": [
-        Attribution("Flask", "https://flask.palletsprojects.com/en/3.0.x/"),
-        Attribution("Jinja2", "https://jinja.palletsprojects.com/en/3.0.x/"),
-        Attribution("Flask-Compress", "https://pypi.org/project/Flask-Compress/"),
-        Attribution("Flask-SocketIO", "https://flask-socketio.readthedocs.io/en/latest/"),
+        Attribution("Flask", "https://flask.palletsprojects.com/en/3.0.x/", "General backend"),
+        Attribution("Jinja2", "https://jinja.palletsprojects.com/en/3.0.x/", "Server-side HTML page templates"),
+        Attribution("Flask-Compress", "https://pypi.org/project/Flask-Compress/", "Flask support for page / asset compressiond"),
+        Attribution("Flask-SocketIO", "https://flask-socketio.readthedocs.io/en/latest/", "Flask support for Socket IO"),
+        Attribution("Gunicorn", "https://gunicorn.org/", "WSGI HTTP server to run Flask on Debian")
     ]
 }
 

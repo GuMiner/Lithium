@@ -12,6 +12,7 @@ base.APP = app  # Allows for blueprints to access and use the app instance.
 from pages import games, projects, puzzles, recommendations
 
 app.config['SECRET_KEY'] = {'UNUSED'}
+app.config['EXPLAIN_TEMPLATE_LOADING'] = True
 socketio = SocketIO(app)
 
 Compress(app)
@@ -32,10 +33,6 @@ def handle_not_found(error):
 @app.route("/")
 def index():
     return render_template("index.html")
-
-@app.route("/attributions")
-def attributions():
-    return render_template("attributions.html")
 
 @app.route("/diagnostics")
 def diagnostics():

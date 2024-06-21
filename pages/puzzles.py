@@ -5,7 +5,7 @@ from typing import List
 
 from . import base
 
-puzzles = Blueprint('puzzles', __name__, url_prefix='/puzzles', template_folder='../templates')
+puzzles = Blueprint('puzzles', __name__, url_prefix='/puzzles', template_folder='../templates/puzzles')
 
 def _get_puzzle_db():
     db = getattr(g, '_puzzle_data_db', None)

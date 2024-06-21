@@ -63,7 +63,12 @@ function convertNumbers() {
     document.getElementById('convertedNumbers').textContent = outputString;
 }
 
+function convertSubstituteNumbers() {
+
+}
+
 (window as any).convertNumbers = convertNumbers;
+(window as any).convertSubstituteNumbers = convertSubstituteNumbers;
 (window as any).toggleTheme = toggleTheme;
 
 window.addEventListener('load', () =>

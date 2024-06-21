@@ -11,13 +11,13 @@
 <h2>JS/CSS Libraries ☕</h2>
 <ul>
 {% for library in attributions.javaScript %}
-<li><b>{{ library.name }}</b> — <a href="{{ library.link }}">{{ library.link }}</a></li>
+<li><b>{{ library.name }}</b> — <a href="{{ library.link }}">{{ library.link }}</a><ol><li class="circle-bullet">{{ library.details }}</li></ol></li>
 {% endfor %}
 </ul>
 <h2>Python 🐍</h2>
 <ul>
 {% for library in attributions.python %}
-<li><b>{{ library.name }}</b> — <a href="{{ library.link }}">{{ library.link }}</a></li>
+<li><b>{{ library.name }}</b> — <a href="{{ library.link }}">{{ library.link }}</a><ol><li class="circle-bullet">{{ library.details }}</li></ol></li>
 {% endfor %}
 </ul>
 {% endblock content %}
