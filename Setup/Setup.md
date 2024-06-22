@@ -74,6 +74,16 @@ crontab -e
 */5 * * * * /root/bandwidth-limit.sh >> /var/log/bandwidth-limit.log 2>&1
 ...
 
+# Setup HTTPS
+https://certbot.eff.org/instructions?ws=nginx&os=debiantesting
+apt update
+apt install snapd
+snap install --classic certbot
+certbot --nginx
+
+(and finally)
+'service nginx reload' so that cert renewals automatically reload 'nginx' to get the new cert.
+
 # Enable TURN server for client-to-client optimization
 apt-get install coturn
 nano /etc/default/coturn

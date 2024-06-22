@@ -161,6 +161,8 @@ scss/math.cs*
 static/index.*
 static/game.*
 static/math.*
+static/lobby.*
+static/puzzle.*
 
 # Database info
 db/*
