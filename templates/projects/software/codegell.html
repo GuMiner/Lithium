@@ -1,0 +1,63 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<h2>About</h2>
+<div class="grid fit-content">
+  <div>
+    <p>
+      <b>{{ project.name }}</b> project tested if real-time CSG generation with volumetric texture map creation was feasible for use within a computer game.
+    </p>
+    <p>
+      Overall, while performance was acceptable rendering one object, the resulting application was not scalable for use within a production computer game
+    </p>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="/static/projects/software-projects/code-gell/checkerboard volumetric texture shaded.png" alt="A volumetrically-rendered checkerboard"/>
+      <footer>A volumetrically-rendered checkerboard</footer>
+    </article>
+  </div>
+</div>
+<div class="grid fit-content">
+  <div>
+    <p>
+      <b>{{ project.name }}</b> uses a <a href="https://github.com/GuMiner/Surface-Netgen-Fork">modified version</a> of the <a href="http://sourceforge.net/projects/netgen-mesher/">Netgen library</a>, which I had stripped-down to only generate triangles, surface meshes, and overall improve performance and usability for realtime operations.
+    </p>
+    <p>
+      When given a description of an object, this program will send it through my Netgen variant to determine the triangles forming the object' s mesh, put the triangles on a texture image, and fill the texture using an appropriate volumetric voxel texture. With this process, <b>{{ project.name }}</b> renders in real-time object <i>cuts</i> and <i>holes</i> instead of the defined triangles of an <i>object itself</i>.
+    </p>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="/static/projects/software-projects/code-gell/Triangle ID texture shaded.png" alt="CSG from Netgen, without volumetric textures"/>
+      <footer>CSG from Netgen, without volumetric textures</footer>
+    </article>
+  </div>
+</div>
+<h2>Implementation</h2>
+<div class="grid fit-content">
+  <div>
+    <p>
+      This program uses modern OpenGL 4.0 rendering, along with <a href="http://glew.sourceforge.net/">GLEW</a>, <a href="https://github.com/GuMiner/Surface-Netgen-Fork">Surface-Netgen-Fork</a>, and <a href="http://www.glfw.org/index.html">GLFW3</a>.
+    </p>
+    <p>
+      For more information, see the source code on <a href="https://github.com/GuMiner/Volumetric-CSG-Texture-Mapping">GitHub</a>.
+    </p>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="/static/projects/software-projects/code-gell/Watermelon volumetric texture shaded.png" alt="'Watermellon' volumetric texture shaded object"/>
+      <footer>'Watermellon' volumetric texture shaded object</footer>
+    </article>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="/static/projects/software-projects/code-gell/High-Res fragment shaded.png" alt="Volumetric fragment-shared object"/>
+      <footer>Volumetric fragment-shared object</footer>
+    </article>
+  </div>
+</div>
+{% endblock content %}

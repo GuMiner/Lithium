@@ -91,7 +91,22 @@ hardwares = {
 
 image_prefix = '/static/projects/software-projects'
 softwares = {
-
+    "octocad": Project("Octocad", f"{GITHUB_PREFIX}/Octocad", f"{image_prefix}/Octocad.png",
+        "November 2016", "...", [ "Software" ]),
+    "napack": Project("Napack Package Framework", f"{GITHUB_PREFIX}/napack", f"{image_prefix}/Napack.png",
+        "February 2017", "...", [ "Software" ]),
+    "rainbot": Project("RainBot", f"{GITHUB_PREFIX}/RainBot", f"{image_prefix}/RainBot.png",
+        "October 2017", "...", [ "Software" ]),
+    "piebot": Project("PieBot", f"{GITHUB_PREFIX}/PieBot", f"{image_prefix}/PieBot.png",
+        "November 2017", "...", [ "Software" ]),
+    "geoweather": Project("GeoWeather API", f"{GITHUB_PREFIX}/GeoWeather", f"{image_prefix}/GeoWeather.png",
+        "January 2018", "...", [ "Software" ]),
+    "topography": Project("Topography Rasterization", f"{GITHUB_PREFIX}/TopographicRasterizer", f"{image_prefix}/TopographicRasterizer.png",
+        "December 2018", "...", ["Design", "Printer", "Software" ]),
+    "codegell": Project("CodeGell", "/projects/software/codegell", f"{image_prefix}/CodeGell.png",
+        "June 2014", "June 2024", ["Games", "Software" ]),
+    "coursedegreetracker": Project("Course Degree Tracker", "/projects/software/coursedegreetracker", f"{image_prefix}/CourseDegreeTracker.png",
+        "February 2012", "June 2024", [ "Software" ]),
 }
 
 image_prefix = '/static/projects/mobile-projects'
@@ -196,4 +211,4 @@ def simulation_project(project: str):
 
 @projects.route("/software/<project>")
 def software_project(project: str):
-    return _lookup_project("software", project, simulations)
+    return _lookup_project("software", project, softwares)

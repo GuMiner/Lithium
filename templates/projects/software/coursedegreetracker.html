@@ -1,0 +1,38 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<h2>About</h2>
+<div class="grid fit-content">
+  <div>
+    <p>
+      I wrote <b>{{ project.name }}</b> to properly track all the courses I needed to take in college with the dependencies each course required.
+    </p>
+    <p>
+      With this program, I was able to saturate my course load and finish college efficiently.
+    </p>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="/static/projects/software-projects/course-degree-tracker/CourseDegreeTracker1.png" alt="The course graph generated (with manual layout) from CourseDegreeTracker"/>
+      <footer>The course graph generated (with manual layout) from CourseDegreeTracker</footer>
+    </article>
+  </div>
+</div>
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="/static/projects/software-projects/course-degree-tracker/CourseDegreeTracker2.png" alt="A 3D view of the course load. This was implemented to better sort dependencies, but was not effective"/>
+      <footer>A 3D view of the course load. This was implemented to better sort dependencies, but was not effective</footer>
+    </article>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="/static/projects/software-projects/course-degree-tracker/CourseDegreeTracker3.png" alt="A list view of all courses, completed and non-completed"/>
+      <footer>A list view of all courses, completed and non-completed</footer>
+    </article>
+  </div>
+</div>
+{% endblock content %}
