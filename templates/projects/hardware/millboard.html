@@ -6,10 +6,10 @@
 {% include "_project_header.html" %}
 <h2>Conceptual Design</h2>
 <p>
-  This project was initially to create a low-cost, custom electronics board capable of driving six stepper motors. Because my mill design was unusual in requiring six stepper motors, currently-available boards such as the <a href="https://ultimachine.com/ramps">RAMPS board</a> and <a href="http://reprap.org/wiki/Comparison_of_Electronics">other electronics</a> were not be capable of driving my mill.
+  This project was initially to create a low-cost, custom electronics board capable of driving six stepper motors. Because my mill design was unusual in requiring six stepper motors, currently-available boards such as the <a href="https://ultimachine.com/collections/hardware">RAMPS board</a> and <a href="http://reprap.org/wiki/Comparison_of_Electronics">other electronics</a> were not be capable of driving my mill.
 </p>
 <p>
-  To construct the electronics board, I prototyped a PCB with <a href="http://kicad-pcorg/">KiCad</a> and send the design out for manufacturing to <a href="https://oshpark.com/">OSH Park</a>. Because OSH Park charges for the total rectangular surface area used, I attempted to collapse a 12-pin keypad, a 128x64 LCD display, six stepper motor drives and an <a href="http:www.atmel.com/devices/ATMEGA328P.aspx">ATmega328P-PU microcontroller</a> all on the single board. To support all of these devices, I also used a few <a href="http://www.nxp.codocuments/data_sheet/74HC_HCT595.pdf">serial-to-parallel</a> chips to increase the total number of I/O pins available.
+  To construct the electronics board, I prototyped a PCB with <a href="http://kicad-pcb.org/">KiCad</a> and send the design out for manufacturing to <a href="https://oshpark.com/">OSH Park</a>. Because OSH Park charges for the total rectangular surface area used, I attempted to collapse a 12-pin keypad, a 128x64 LCD display, six stepper motor drives and an <a href="https://www.microchip.com/en-us/product/ATMEGA328P">ATmega328P-PU microcontroller</a> all on the single board. To support all of these devices, I also used a few <a href="https://www.mouser.com/datasheet/2/302/74HC_HCT595-225040.pdf">serial-to-parallel</a> chips to increase the total number of I/O pins available.
 </p>
 <b>Pins required:</b>
 <ul>

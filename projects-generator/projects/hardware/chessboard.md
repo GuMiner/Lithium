@@ -1,6 +1,6 @@
 none
 ## About
-{} With access to either an <a href="https://www.epiloglaser.com/products/legend-laser-series.htm">Epilog Helix</a> or a <a href="http://www.ulsinc.com/products/">Universal</a> laser, you can make your own chess board.
+{} With access to either an <a href="https://www.epiloglaser.com/laser-machines/product-line/">Epilog Helix</a> or a <a href="http://www.ulsinc.com/products/">Universal</a> laser, you can make your own chess board.
 [g
  @hardware-projects/laser-cut/chess-board/board.jpg~Laser-engraved chess board with marbled squares.
 ]

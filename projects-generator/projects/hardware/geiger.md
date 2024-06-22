@@ -29,7 +29,7 @@ none
 @hardware-projects/geiger-counter/wire_tube.png~Geiger Counter tube holder (wireframe)
 @hardware-projects/geiger-counter/render_tube.png~Geiger Counter tube holder (render)
 ]
-{}  These models were designed using <a href="http://brlcad.org/">BRL-CAD</a>, which gave me a scripting interface to create the models along with a graphical output view. With this design:
+{}  These models were designed using <a href="https://brlcad.org/">BRL-CAD</a>, which gave me a scripting interface to create the models along with a graphical output view. With this design:
 -> The geiger counter base separates the battery storage from the electronics compartment
 - The geiger counter lid u-pipe holds the geiger counter tube as a snap-in item
 -< The geiger counter tube holder has several holes, permitting charged particles to pass through

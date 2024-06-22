@@ -170,4 +170,6 @@ static/aboutme/*
 static/projects/*
 static/fonts/*
 
+# Secure data
 secure.conf
+valid-external-links.txt

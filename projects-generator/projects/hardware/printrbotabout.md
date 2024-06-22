@@ -36,7 +36,7 @@ none
 Expensive for both personal and professional use, but I have used this software in high-school design courses.</small>
 - <a href="http://www.blender.org/">Blender</a>: Subdivision freeform modeling tool.
 <small>Has an immense learning curve and is very focused towards the arts, making it harder to design objects to precise dimentions.</small>
-- <a href="http://brlcad.org/">BRL-CAD</a>: A <a href="https://en.wikipedia.org/wiki/Constructive_solid_geometry">CSG</a>-based modeling tool, with extensive functionality.
+- <a href="https://brlcad.org/">BRL-CAD</a>: A <a href="https://en.wikipedia.org/wiki/Constructive_solid_geometry">CSG</a>-based modeling tool, with extensive functionality.
 <small>Has a moderate learning curve. I used this for a few models before moving onto other software.</small>
 - <a href="http://www.openscad.org/">OpenSCAD</a>: A CSG modeling tool designed heavily for programmers and those who need to script objects.
 <small>It's not always the fastest, but is useful enough that I continue to yse this for a good number of my 3D printing projects.</small>

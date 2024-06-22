@@ -1,0 +1,36 @@
+{# GENERATED CONTENT #}
+{% extends "_base.html" %}
+
+{% block content %}
+{% include "_projects_header.html" %}
+{% include "_project_header.html" %}
+<h2>About</h2>
+<p>
+  This application was a small mobile application to test bitmap fonts and draw Lissajous curves on an older Windows Mobile PDA.
+</p>
+<p>
+  This application was a partial success -- drawing bitmap fonts was fast on this low-power device, but was not polished or attractive.
+</p>
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/pda/lissajous-curves/LissajousCurves1.png" alt="Simple Lissajous curves, with the text overlay"/>
+      <footer>Simple Lissajous curves, with the text overlay</footer>
+    </article>
+  </div>
+</div>
+<div class="grid fit-content">
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/pda/lissajous-curves/LissajousCurves2.png" alt="Simple Lissajous curves, without the text overlay"/>
+      <footer>Simple Lissajous curves, without the text overlay</footer>
+    </article>
+  </div>
+  <div class="grid max-content-height">
+    <article>
+      <img src="../../static/projects/mobile-projects/pda/lissajous-curves/LissajousCurves3.png" alt="Bitmap text demonstration, in the about page"/>
+      <footer>Bitmap text demonstration, in the about page</footer>
+    </article>
+  </div>
+</div>
+{% endblock content %}

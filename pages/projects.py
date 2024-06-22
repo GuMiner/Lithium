@@ -111,11 +111,11 @@ mobiles = {
         "August 2014", "June 2024", ["Mobile", "Software" ]),
      # PDA projects
      "draftingprogram": Project("iPAQ PDA Drafting Program", "/projects/mobile/draftingprogram", f"{image_prefix}/pda/DraftingProgram.png",
-        "January 2011", "...", ["Mobile", "Software" ]),
+        "January 2011", "June 2024", ["Mobile", "Software" ]),
      "fractalviewer": Project("iPAQ PDA Fractal Viewer", "/projects/mobile/fractalviewer", f"{image_prefix}/pda/FractalViewer.png",
         "March 2011", "June 2024", ["Mobile", "Software" ]),
      "lissajouscurves": Project("iPAQ PDA Lissajous Curves", "/projects/mobile/lissajouscurves", f"{image_prefix}/pda/LissajousCurves.png",
-        "August 2010", "...", ["Mobile", "Software" ]),
+        "August 2010", "June 2024", ["Mobile", "Software" ]),
      "particlecollider": Project("iPAQ PDA Particle Collider", "/projects/mobile/particlecollider", f"{image_prefix}/pda/ParticleCollider.png",
         "July 2011", "June 2024", ["Mobile", "Software" ]),
 }
