@@ -31,14 +31,14 @@ This application accurately simulates the thermal transport over time within a p
 {
 This program is written in platform-independent C++ code, but you'll have to source the libraries yourself and I have not tested Unix/OS X compilation.
 <br />
-The Windows executable can be downloaded <a href="../../static/projects/simulation-projects/flux-sim/FluxSim_WinExecutable.zip">here</a> -- you'll also need the
+The Windows executable can be downloaded <a href="/static/projects/simulation-projects/flux-sim/FluxSim_WinExecutable.zip">here</a> -- you'll also need the
 Visual Studio 2012 (32-bit) <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30679">C++ redistributable</a>.
 <br />
-The source code and assets can be downloaded <a href="../../static/projects/simulation-projects/flux-sim/FluxSim_SourcesAssets.zip">here</a>
+The source code and assets can be downloaded <a href="/static/projects/simulation-projects/flux-sim/FluxSim_SourcesAssets.zip">here</a>
 }
 <blockquote>
     <video controls alt="FluxSim demo video">
-        <source src="../../static/projects/simulation-projects/flux-sim/demo.mp4" type="video/mp4">
+        <source src="/static/projects/simulation-projects/flux-sim/demo.mp4" type="video/mp4">
         Your browser does not support the video tag. Unfortuantely, the video will not play here.
     </video>
     <footer>

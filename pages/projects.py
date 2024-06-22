@@ -89,6 +89,11 @@ hardwares = {
         "March 2014", "June 2024",  ["Printer", "Hardware"  ]),
 }
 
+image_prefix = '/static/projects/software-projects'
+softwares = {
+
+}
+
 image_prefix = '/static/projects/mobile-projects'
 mobiles = {
     # TODO add new Android apps
@@ -140,22 +145,19 @@ def _most_recent_projects(projects):
     return _sorted_projects(projects)[0:2]
 
 ### Project landing pages ###
-@projects.route("")
+@projects.route("/")
 def index():
     most_recent_projects = \
         _most_recent_projects(mobiles) + \
         _most_recent_projects(simulations) + \
         _most_recent_projects(games_data) + \
-        _most_recent_projects(hardwares)
+        _most_recent_projects(hardwares) + \
+        _most_recent_projects(softwares)
     return render_template("projects.html", projects=most_recent_projects)
 
 @projects.route("/games")
 def games():
     return render_template("games_projects.html", projects=games_data.values())
-
-@projects.route("/simulation")
-def simulation():
-    return render_template("simulation.html", projects=simulations.values())
 
 @projects.route("/hardware")
 def hardware():
@@ -165,16 +167,20 @@ def hardware():
 def mobile():
     return render_template("mobile.html", projects=_sorted_projects(mobiles))
 
+@projects.route("/simulation")
+def simulation():
+    return render_template("simulation.html", projects=simulations.values())
+
+@projects.route("/software")
+def software():
+    return render_template("software.html", projects=_sorted_projects(softwares))
+
 def _lookup_project(category, project, projects: dict):
     lower_project = project.lower()
     if lower_project in projects and GITHUB_PREFIX not in projects[lower_project].link:
         return render_template(f"/{category}/{escape(project)}.html", project=projects[lower_project])
     else:
         return render_template("errors/not_found.html")
-
-@projects.route("/simulation/<project>")
-def simulation_project(project: str):
-    return _lookup_project("simulation", project, simulations)
 
 @projects.route("/hardware/<project>")
 def hardware_project(project: str):
@@ -183,3 +189,11 @@ def hardware_project(project: str):
 @projects.route("/mobile/<project>")
 def mobile_project(project: str):
     return _lookup_project("mobile", project, mobiles)
+
+@projects.route("/simulation/<project>")
+def simulation_project(project: str):
+    return _lookup_project("simulation", project, simulations)
+
+@projects.route("/software/<project>")
+def software_project(project: str):
+    return _lookup_project("software", project, simulations)

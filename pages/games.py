@@ -12,8 +12,8 @@ class Game:
 @games.route("/")
 def index():
     game_cards = [
-        Game("blocks", "n/a", "/games/blocks"),
-        Game("lobby", "n/a", "/games/lobby"),
+        Game("blocks", "/static/game/icons/blocks.png", "/games/blocks"),
+        Game("lobby", "/static/game/icons/pending.png", "/games/lobby"),
     ]
 
     return render_template("games/games.html", games=game_cards)

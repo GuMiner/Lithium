@@ -28,7 +28,7 @@ def inject_year():
 
 @app.errorhandler(exceptions.NotFound)
 def handle_not_found(error):
-    return render_template("errors/not_found.html")
+    return render_template("errors/not_found.html"), 404
 
 @app.route("/")
 def index():

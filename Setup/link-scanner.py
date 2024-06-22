@@ -12,6 +12,11 @@ def _find_links(text: str) -> List[str]:
             matches = re.findall(r'href="([^"]*)"', line)
             for link in matches:
                 links.append(link)
+        
+        if 'src' in line and not 'text/javascript' in line:
+            matches = re.findall(r'src="([^"]*)"', line)
+            for link in matches:
+                links.append(link)
     
     return links
 

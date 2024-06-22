@@ -104,7 +104,7 @@ referenceSets = [
             Reference("CAD for Programmers (OpenSCAD)", "http://www.openscad.org/"),
             Reference("Ray Tracing (POV-Ray)", "http://povray.org/"),
             Reference("More Art Modeling (Wings 3D)", "http://www.wings3d.com/"),
-            Reference("See more details at:", "projects/hardware/printrbotabout")
+            Reference("See more details at:", "/projects/hardware/printrbotabout")
         ]),
         ReferenceGroup("3D Printing", "June 2024", [
             Reference("Models (MyMiniFactory)", "https://www.myminifactory.com"),

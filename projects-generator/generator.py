@@ -35,7 +35,7 @@ def _generate_image(depth, short_line: str):
     return [
         f'{depth}<div class="grid max-content-height">',
         f'{depth}  <article>',
-        f'{depth}    <img src="../../static/projects/{parts[0]}" alt="{alt_text}"/>',
+        f'{depth}    <img src="/static/projects/{parts[0]}" alt="{alt_text}"/>',
         f'{depth}    <footer>{parts[1]}</footer>',
         f'{depth}  </article>',
         f'{depth}</div>'
