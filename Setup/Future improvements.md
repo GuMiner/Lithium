@@ -2,7 +2,10 @@
 - Photos section
 - Diagnostics page details. 
   - Air quality monitor moved off of diagnostics into projects
+  - Network, cpu, memory, disk usage
+- Fix dictionary word list to be better, update thesaurus list to not recursively link
 - Lobby implementation for WebRTC / peer-to-peer connectivity 
+  - Work on socket sync, play sessions, scoring and goals
 - 'Blocks' game improvements to be a real game.
 - Blog section
   - Rewrite and add in the quantum computing 'project' there.
