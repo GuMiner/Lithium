@@ -1,5 +1,9 @@
+import datetime
 from dataclasses import dataclass
 from flask import Blueprint, render_template
+from flask_socketio import emit
+
+from . import base
 
 games = Blueprint('games', __name__, url_prefix='/games', template_folder='../templates/games')
 
@@ -25,3 +29,12 @@ def blocks():
 @games.route("/lobby")
 def lobby():
     return render_template("lobby.html")
+
+@base.SOCKETIO.on('chat-client')
+def sync(message):
+    emit('chat-server', {'data': message + ': Received'}, broadcast=True)
+    
+# Lobby socketio functions
+@base.SOCKETIO.on('client-update')
+def update_clients(message):
+    emit('current-clients', { 'clients': ['a', 'b', 'c', datetime.datetime.now().second]})

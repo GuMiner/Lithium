@@ -1,19 +1,20 @@
 import datetime
 from werkzeug import exceptions
-from flask import Flask, render_template, g
-from flask_socketio import SocketIO, emit
+from flask import Flask, render_template
+from flask_socketio import SocketIO
 from flask_compress import Compress
 from pages import base
 
 app = Flask(__name__)
 base.APP = app  # Allows for blueprints to access and use the app instance.
 
+app.config['SECRET_KEY'] = {'UNUSED'}
+app.config['EXPLAIN_TEMPLATE_LOADING'] = False # Enable if pages render odd
+socketio = SocketIO(app)
+base.SOCKETIO = socketio
+
 # Must be imported later so that 'base.APP' is not None
 from pages import games, projects, puzzles, recommendations
-
-app.config['SECRET_KEY'] = {'UNUSED'}
-app.config['EXPLAIN_TEMPLATE_LOADING'] = True
-socketio = SocketIO(app)
 
 Compress(app)
 app.register_blueprint(games.games)
@@ -37,16 +38,6 @@ def index():
 @app.route("/diagnostics")
 def diagnostics():
     return render_template("diagnostics.html")
-
-@socketio.on('block-sync')
-def sync(message):
-    print(message)
-    emit('sync-result', {'data': message + ': Received'})
-
-# Lobby socketio functions
-@socketio.on('client-update')
-def update_clients(message):
-    emit('current-clients', { 'clients': ['a', 'b', 'c', datetime.datetime.now().second]})
 
 if __name__ == "__main__":
     socketio.run(app)
