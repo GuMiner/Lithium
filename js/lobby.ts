@@ -1,18 +1,19 @@
 import { io } from "socket.io-client";
 
-// Add a test websocket
+// Connect to the server
 const socket = io();
+const sessionId = crypto.randomUUID();
 socket.on("connect", () => {
     console.log(socket.id);
 });
 
 // Update list of any connected clients
-
 setInterval(function() {
     if (socket.connected) {
-        socket.emit('client-update', "");
+        const name = (document.getElementById('userName') as HTMLInputElement).value;
+        socket.emit('client-update', { id: sessionId, name: name });
     }
-}, 3000);
+}, 2000);
 
 socket.on('current-clients', (data) => {
     var prefix = '<ul>';
@@ -21,21 +22,27 @@ socket.on('current-clients', (data) => {
     for (const client of data.clients) {
         clients += `<li>${client}</li>`        
     }
+
+    if (clients == '') {
+        clients += `<li>No active clients</li>`
+    }
     document.getElementById('currentClients').innerHTML = `${prefix}${clients}${suffix}`;
 })
 
-document.getElementById('testForm').onsubmit = e => {
+// Connect to available clients
+document.getElementById('connectForm').onsubmit = e => {
     e.preventDefault();
-    var input = (document.getElementById('testText') as HTMLInputElement).value;
-    console.log(`In ${input}`);
-    socket.emit('chat-client', input);
-    (document.getElementById('testText') as HTMLInputElement).value = '';
+
+    connect();
 }
 
+//socket.emit('chat-client', input);
+//(document.getElementById('testText') as HTMLInputElement).value = '';
 socket.on('chat-server', (data) => {
     console.log(`Received: {data.data}`);
     document.getElementById('testLog').innerHTML += `<br/>${data.data}`
 });
+
 
 // WebRTC testing: https://webrtc.org/getting-started
 navigator.mediaDevices.enumerateDevices()
@@ -68,4 +75,7 @@ function playVideoFromCamera() {
         .catch((error) => console.error('Error opening video camera:', error));
 }
 
-playVideoFromCamera();
+// Triggered upon the button press
+function connect() {
+    playVideoFromCamera();
+}

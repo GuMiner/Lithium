@@ -1,4 +1,6 @@
-import datetime
+from datetime import datetime 
+import json
+import threading
 from dataclasses import dataclass
 from flask import Blueprint, render_template
 from flask_socketio import emit
@@ -34,7 +36,22 @@ def lobby():
 def sync(message):
     emit('chat-server', {'data': message + ': Received'}, broadcast=True)
     
+clients = {}
+
 # Lobby socketio functions
 @base.SOCKETIO.on('client-update')
-def update_clients(message):
-    emit('current-clients', { 'clients': ['a', 'b', 'c', datetime.datetime.now().second]})
+def update_clients(message: dict):
+    
+    id = message['id']
+
+    # Name and keep-alive update
+    now = datetime.now()
+    client_state = { 'name': message['name'], 'lastUpdate': now }
+    clients[id] = client_state
+
+    # Required for inline deletion
+    for id in list(clients.keys()):
+        if (now - clients[id]['lastUpdate']).seconds > 10:
+            del clients[id]
+
+    emit('current-clients', { 'clients': [v['name'] for v in clients.values()]})

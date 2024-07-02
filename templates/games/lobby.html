@@ -2,14 +2,25 @@
 
 {% block content %}
 {% include "_games_header.html" %}
-<div id="currentClients"></div>
-<div id="testLog">
+<div>
+    <h3>Online users</h3>
+    <div id="currentClients">
+        <ul><li>Loading...</li></ul>
+    </div>
 </div>
-<form id="testForm">
-    <label for="testText">I:</label>
-    <input type="text" id="testText">
+
+<form id="connectForm">
+    <div class="grid fit-content">
+        Name
+        <input type="text" id="userName">
+        <button type="submit">Connect</button>
+    </div>
 </form>
+
 <video id="localVideo" autoplay playsinline controls="false"/>
+<div id="remoteVideos">
+    No other connections.
+</div>
 {% endblock content %}
 
 {% block scripts %}
