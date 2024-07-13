@@ -34,7 +34,7 @@ def lobby():
 
 @base.SOCKETIO.on('chat-client')
 def sync(message):
-    emit('chat-server', {'data': message + ': Received'}, broadcast=True)
+    emit('chat-server', {'data': f"{message['name']}: {message['message']}"}, broadcast=True)
     
 clients = {}
 

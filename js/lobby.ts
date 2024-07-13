@@ -15,36 +15,48 @@ setInterval(function() {
     }
 }, 2000);
 
+// TODO I probably need the sessionIDs of the clients too.
+var lastKnownClients = null;
 socket.on('current-clients', (data) => {
     var prefix = '<ul>';
     var suffix = '</ul>';
     let clients = '';
+
+    lastKnownClients = data.clients;
     for (const client of data.clients) {
         clients += `<li>${client}</li>`        
     }
-
+    
     if (clients == '') {
         clients += `<li>No active clients</li>`
     }
     document.getElementById('currentClients').innerHTML = `${prefix}${clients}${suffix}`;
 })
 
-// Connect to available clients
+// Connect to available clients if connect pressed
 document.getElementById('connectForm').onsubmit = e => {
     e.preventDefault();
-
     connect();
 }
 
-//socket.emit('chat-client', input);
-//(document.getElementById('testText') as HTMLInputElement).value = '';
+// Handle basic ephemeral chatting
+document.getElementById('chatForm').onsubmit = e => {
+    e.preventDefault();
+    const name = (document.getElementById('userName') as HTMLInputElement).value;
+    const chatEntry = document.getElementById('chatEntry') as HTMLInputElement;
+
+    socket.emit('chat-client', {name: name, message: chatEntry.value});
+    chatEntry.value = '';
+}
+
 socket.on('chat-server', (data) => {
     console.log(`Received: {data.data}`);
-    document.getElementById('testLog').innerHTML += `<br/>${data.data}`
+    document.getElementById('chatResponse').innerHTML += `<br/>${data.data}`
 });
 
 
 // WebRTC testing: https://webrtc.org/getting-started
+// Log connected devices
 navigator.mediaDevices.enumerateDevices()
     .then(devices => {
         devices.forEach(device =>
@@ -59,7 +71,7 @@ navigator.mediaDevices.enumerateDevices()
             });
     });
 
-function playVideoFromCamera() {
+async function playVideoFromCamera(): Promise<MediaStream> {
     // This will take a lot of back and forth to get working well, but this does, surprisingly, just work.
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
     const constraints = {
@@ -70,12 +82,115 @@ function playVideoFromCamera() {
         'audio': true};
     const videoElement = document.querySelector('video#localVideo') as HTMLVideoElement;
 
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then((stream) => videoElement.srcObject = stream)
-        .catch((error) => console.error('Error opening video camera:', error));
+    const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+    videoElement.srcObject = mediaStream;
+    return mediaStream;
 }
 
+// TODO figure out how to pass credentials in.
+const configuration = {'iceServers': [{'urls': 'turn:helium24.net:3478'}]}
+
+let pc1Local: RTCPeerConnection;
+let pc1Remote: RTCPeerConnection;
+
+function iceCallback1Local(event) {
+    handleCandidate(event.candidate, pc1Remote, 'pc1: ', 'local');
+  }
+  
+function iceCallback1Remote(event) {
+handleCandidate(event.candidate, pc1Local, 'pc1: ', 'remote');
+}
+
+function handleCandidate(candidate, dest, prefix, type) {
+    dest.addIceCandidate(candidate)
+        .then(() => {
+            console.log('AddIceCandidate success.');
+        }),
+        (error) => {
+                console.log(`Failed to add ICE candidate: ${error.toString()}`);
+        };
+    console.log(`${prefix}New ${type} ICE candidate: ${candidate ? candidate.candidate : '(null)'}`);
+}
+
+function gotRemoteStream1(e) {
+    const videoElement = document.querySelector('video#remoteVideo') as HTMLVideoElement;
+    maybeSetCodecPreferences(e);
+    if (videoElement.srcObject !== e.streams[0]) {
+      videoElement.srcObject = e.streams[0];
+      console.log('pc1: received remote stream');
+    }
+  }
+
+  // Necessary? Should at least log the codec types
+  const supportsSetCodecPreferences = window.RTCRtpTransceiver &&
+  'setCodecPreferences' in window.RTCRtpTransceiver.prototype;
+function maybeSetCodecPreferences(trackEvent) {
+  if (!supportsSetCodecPreferences) return;
+  if (trackEvent.track.kind === 'video') {
+    const {codecs} = RTCRtpReceiver.getCapabilities('video');
+    for (const codec of codecs) {
+        console.log(codec.clockRate)
+        console.log(codec.mimeType);
+    }
+    const selectedCodecIndex = codecs.findIndex(c => c.mimeType === 'video/VP8');
+    const selectedCodec = codecs[selectedCodecIndex];
+    codecs.splice(selectedCodecIndex, 1);
+    codecs.unshift(selectedCodec);
+    trackEvent.transceiver.setCodecPreferences(codecs);
+  }
+}
+
+async function connectToPeers(localStream: MediaStream) {
+    const audioTracks = localStream.getAudioTracks();
+    const videoTracks = localStream.getVideoTracks();
+    if (audioTracks.length > 0) {
+      console.log(`Using audio device: ${audioTracks[0].label}`);
+    }
+    if (videoTracks.length > 0) {
+      console.log(`Using video device: ${videoTracks[0].label}`);
+    }
+
+    const  servers = null;
+    pc1Local = new RTCPeerConnection(servers);
+    pc1Remote = new RTCPeerConnection(servers);
+    pc1Remote.ontrack = gotRemoteStream1;
+    pc1Local.onicecandidate = iceCallback1Local;
+    pc1Remote.onicecandidate = iceCallback1Remote;
+    console.log('pc1: created local and remote peer connection objects');
+
+    localStream.getTracks().forEach(track => pc1Local.addTrack(track, localStream));
+    console.log('Adding local stream to pc1Local');
+
+    const offerOptions: RTCOfferOptions = {
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true
+    };
+
+    var desc = await pc1Local.createOffer(offerOptions)
+    await gotDescription1Local(desc);
+}
+
+async function gotDescription1Local(desc) {
+  pc1Local.setLocalDescription(desc);
+  console.log(`Offer from pc1Local\n${desc.sdp}`);
+  await pc1Remote.setRemoteDescription(desc);
+
+  // Since the 'remote' side has no media stream we need
+  // to pass in the right constraints in order for it to
+  // accept the incoming offer of audio and video.
+  var answer = await pc1Remote.createAnswer();
+  gotDescription1Remote(answer);
+}
+
+function gotDescription1Remote(desc) {
+  pc1Remote.setLocalDescription(desc);
+  console.log(`Answer from pc1Remote\n${desc.sdp}`);
+  pc1Local.setRemoteDescription(desc);
+}
+
+
 // Triggered upon the button press
-function connect() {
-    playVideoFromCamera();
+async function connect() {
+    const localStream = await playVideoFromCamera();
+    connectToPeers(localStream);
 }

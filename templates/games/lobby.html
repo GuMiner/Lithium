@@ -16,10 +16,24 @@
         <button type="submit">Connect</button>
     </div>
 </form>
+<div class="expandable-border">
+    <form id="chatForm">
+        <div class="grid fit-content">
+            Chat
+            <input id="chatEntry" type="text" ></input>
+            <button type="submit">Send</button>
+        </div>
+    </form>
+    <div class="expandable-border" id="chatResponse">
+        <br/>
+    </div>
+</div>
 
-<video id="localVideo" autoplay playsinline controls="false"/>
+<video id="localVideo" autoplay playsinline controls="false">
+</video>
 <div id="remoteVideos">
-    No other connections.
+    
+<video id="remoteVideo" autoplay playsinline controls="false">
 </div>
 {% endblock content %}
 
