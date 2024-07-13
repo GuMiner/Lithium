@@ -55,3 +55,13 @@ def update_clients(message: dict):
             del clients[id]
 
     emit('current-clients', { 'clients': [v['name'] for v in clients.values()]})
+
+## TODO need to handle candidates here so the clients can find each other.
+
+@base.SOCKETIO.on('rtc-request')
+def start_rtc(offer):
+    emit('rtc-request-broadcast', offer, broadcast=True)
+
+@base.SOCKETIO.on('rtc-response')
+def accept_rtc(offer):
+    emit('rtc-response-broadcast', offer, broadcast=True)

@@ -140,7 +140,20 @@ function maybeSetCodecPreferences(trackEvent) {
   }
 }
 
-async function connectToPeers(localStream: MediaStream) {
+// TODO get the credential from the server upon request.
+const server: RTCIceServer = {
+    // See secure.conf
+};
+
+const servers: RTCConfiguration = {
+    iceServers: [
+        server   
+    ]
+};
+
+var localStream: MediaStream;
+
+async function connect() {
     const audioTracks = localStream.getAudioTracks();
     const videoTracks = localStream.getVideoTracks();
     if (audioTracks.length > 0) {
@@ -150,47 +163,53 @@ async function connectToPeers(localStream: MediaStream) {
       console.log(`Using video device: ${videoTracks[0].label}`);
     }
 
-    const  servers = null;
     pc1Local = new RTCPeerConnection(servers);
-    pc1Remote = new RTCPeerConnection(servers);
-    pc1Remote.ontrack = gotRemoteStream1;
     pc1Local.onicecandidate = iceCallback1Local;
-    pc1Remote.onicecandidate = iceCallback1Remote;
-    console.log('pc1: created local and remote peer connection objects');
-
     localStream.getTracks().forEach(track => pc1Local.addTrack(track, localStream));
     console.log('Adding local stream to pc1Local');
-
+    
     const offerOptions: RTCOfferOptions = {
         offerToReceiveAudio: true,
         offerToReceiveVideo: true
     };
-
-    var desc = await pc1Local.createOffer(offerOptions)
-    await gotDescription1Local(desc);
+    
+    var offer = await pc1Local.createOffer(offerOptions)
+    pc1Local.setLocalDescription(offer);
+    socket.emit('rtc-request', offer)
 }
 
+socket.on('rtc-request-broadcast', (offer) => {
+    pc1Remote = new RTCPeerConnection(servers);
+    pc1Remote.ontrack = gotRemoteStream1;
+    pc1Remote.onicecandidate = iceCallback1Remote;
+    gotDescription1Local(offer);
+
+});
+
 async function gotDescription1Local(desc) {
-  pc1Local.setLocalDescription(desc);
   console.log(`Offer from pc1Local\n${desc.sdp}`);
   await pc1Remote.setRemoteDescription(desc);
 
   // Since the 'remote' side has no media stream we need
   // to pass in the right constraints in order for it to
   // accept the incoming offer of audio and video.
+  // AKA, simulate the existing 'local' video
+  await pc1Remote.setLocalDescription(desc);
   var answer = await pc1Remote.createAnswer();
-  gotDescription1Remote(answer);
+
+  // Signal that the local (caller) should now pickup
+  socket.emit('rtc-response', answer);
 }
 
-function gotDescription1Remote(desc) {
-  pc1Remote.setLocalDescription(desc);
-  console.log(`Answer from pc1Remote\n${desc.sdp}`);
-  pc1Local.setRemoteDescription(desc);
+socket.on('rtc-response-broadcast', (offerResponse) => 
+{
+    console.log(`Answer from pc1Remote\n${offerResponse.sdp}`);
+    pc1Local.setRemoteDescription(offerResponse);
+});
+
+// Get the local video stream up and running.
+async function cameraStart() {
+    localStream = await playVideoFromCamera();
 }
 
-
-// Triggered upon the button press
-async function connect() {
-    const localStream = await playVideoFromCamera();
-    connectToPeers(localStream);
-}
+(window as any).cameraStart = cameraStart;
