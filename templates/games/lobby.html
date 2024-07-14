@@ -8,7 +8,7 @@
     <button id="cameraStart" onclick="cameraStart()">Start Camera and Mic</button>
 </blockquote>
 <div>
-    <h3>Online users</h3>
+    <h3>Online users <i><small>[2 second delay, 10 second timeout]</small></i></h3>
     <div id="currentClients">
         <ul><li>Loading...</li></ul>
     </div>
@@ -34,11 +34,8 @@
     </div>
 </div>
 
-<video id="localVideo" autoplay playsinline controls="false">
-</video>
-<div id="remoteVideos">
-    
-<video id="remoteVideo" autoplay playsinline controls="false">
+<video id="localVideo" autoplay playsinline controls="false"></video>
+<div id="remoteVideos"> 
 </div>
 {% endblock content %}
 

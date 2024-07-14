@@ -2,9 +2,10 @@ import { io } from "socket.io-client";
 
 // Connect to the server
 const socket = io();
-const sessionId = crypto.randomUUID();
+var sessionId = '' + crypto.randomUUID();
 socket.on("connect", () => {
     console.log(socket.id);
+    sessionId = socket.id;
 });
 
 // Update list of any connected clients
@@ -15,8 +16,12 @@ setInterval(function() {
     }
 }, 2000);
 
-// TODO I probably need the sessionIDs of the clients too.
-var lastKnownClients = null;
+interface Client {
+    id: string,
+    name: string
+}
+
+var lastKnownClients: Client[] = null;
 socket.on('current-clients', (data) => {
     var prefix = '<ul>';
     var suffix = '</ul>';
@@ -24,20 +29,15 @@ socket.on('current-clients', (data) => {
 
     lastKnownClients = data.clients;
     for (const client of data.clients) {
-        clients += `<li>${client}</li>`        
+        var nameSuffix = client.id == sessionId ? '(you)' : ''
+        clients += `<li>${client.name} <small>(${client.id}) <i>${nameSuffix}</i></small></li>`        
     }
     
     if (clients == '') {
         clients += `<li>No active clients</li>`
     }
     document.getElementById('currentClients').innerHTML = `${prefix}${clients}${suffix}`;
-})
-
-// Connect to available clients if connect pressed
-document.getElementById('connectForm').onsubmit = e => {
-    e.preventDefault();
-    connect();
-}
+});
 
 // Handle basic ephemeral chatting
 document.getElementById('chatForm').onsubmit = e => {
@@ -74,6 +74,7 @@ navigator.mediaDevices.enumerateDevices()
 async function playVideoFromCamera(): Promise<MediaStream> {
     // This will take a lot of back and forth to get working well, but this does, surprisingly, just work.
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+    // For now, stick to something low-res for testing.
     const constraints = {
         'video': {        
             width: { exact: 400 },
@@ -86,12 +87,6 @@ async function playVideoFromCamera(): Promise<MediaStream> {
     videoElement.srcObject = mediaStream;
     return mediaStream;
 }
-
-// TODO figure out how to pass credentials in.
-const configuration = {'iceServers': [{'urls': 'turn:helium24.net:3478'}]}
-
-let pc1Local: RTCPeerConnection;
-let pc1Remote: RTCPeerConnection;
 
 function iceCallback1Local(event) {
     handleCandidate(event.candidate, pc1Remote, 'pc1: ', 'local');
@@ -112,37 +107,10 @@ function handleCandidate(candidate, dest, prefix, type) {
     console.log(`${prefix}New ${type} ICE candidate: ${candidate ? candidate.candidate : '(null)'}`);
 }
 
-function gotRemoteStream1(e) {
-    const videoElement = document.querySelector('video#remoteVideo') as HTMLVideoElement;
-    maybeSetCodecPreferences(e);
-    if (videoElement.srcObject !== e.streams[0]) {
-      videoElement.srcObject = e.streams[0];
-      console.log('pc1: received remote stream');
-    }
-  }
-
-  // Necessary? Should at least log the codec types
-  const supportsSetCodecPreferences = window.RTCRtpTransceiver &&
-  'setCodecPreferences' in window.RTCRtpTransceiver.prototype;
-function maybeSetCodecPreferences(trackEvent) {
-  if (!supportsSetCodecPreferences) return;
-  if (trackEvent.track.kind === 'video') {
-    const {codecs} = RTCRtpReceiver.getCapabilities('video');
-    for (const codec of codecs) {
-        console.log(codec.clockRate)
-        console.log(codec.mimeType);
-    }
-    const selectedCodecIndex = codecs.findIndex(c => c.mimeType === 'video/VP8');
-    const selectedCodec = codecs[selectedCodecIndex];
-    codecs.splice(selectedCodecIndex, 1);
-    codecs.unshift(selectedCodec);
-    trackEvent.transceiver.setCodecPreferences(codecs);
-  }
-}
+var localStream: MediaStream;
 
 // TODO get the credential from the server upon request.
 const server: RTCIceServer = {
-    // See secure.conf
 };
 
 const servers: RTCConfiguration = {
@@ -151,60 +119,111 @@ const servers: RTCConfiguration = {
     ]
 };
 
-var localStream: MediaStream;
+// Connect to available clients when pressed
+document.getElementById('connectForm').onsubmit = e => {
+    e.preventDefault();
+    connect();
+}
+
+class Peer
+{
+    peerConnection: RTCPeerConnection;
+    remoteId: string
+
+    constructor(localStream: MediaStream, clientId: string) {
+        this.peerConnection = new RTCPeerConnection(servers);
+        this.remoteId = clientId;
+
+        // Ensure that if a remote webcam is received, it is displayed appropriately.
+        this.peerConnection.ontrack = (trackEvent) => {
+            var videoElement = document.getElementById(`remoteVideo-${clientId}`) as HTMLVideoElement;
+            if (videoElement.srcObject !== trackEvent.streams[0]) {
+                videoElement.srcObject = trackEvent.streams[0];
+                console.log(`Received remote stream from ${clientId}`);
+            }
+        }
+
+        // TODO ICE negotiation here
+
+        // Send the local webcam to the remote server
+        const audioTracks = localStream.getAudioTracks();
+        const videoTracks = localStream.getVideoTracks();
+        if (audioTracks.length > 0) {
+            console.log(`Using audio device: ${audioTracks[0].label}`);
+        }
+        if (videoTracks.length > 0) {
+            console.log(`Using video device: ${videoTracks[0].label}`);
+        }
+
+        localStream.getTracks().forEach(track => this.peerConnection.addTrack(track, localStream));
+    }
+};
+
+var peers: Peer[];
+
+function createPeers() {
+    // Clear any existing remote videos
+    const remoteVideoSection = document.getElementById('remoteVideos');
+    remoteVideoSection.innerHTML = ``;
+    
+    peers = [];
+    for (const client of lastKnownClients) {
+        if (client.id == sessionId) {
+            // No peer for the current user, they have their own video feed already.
+            continue;
+        }
+        // Add a new HTML element for each client
+        remoteVideoSection.innerHTML += `<video id="remoteVideo-${client.id}" autoplay playsinline controls="false"></video>`;
+
+        // Create the peer
+        var peer = new Peer(localStream, client.id);
+        peers.push(peer);
+    }
+}
 
 async function connect() {
-    const audioTracks = localStream.getAudioTracks();
-    const videoTracks = localStream.getVideoTracks();
-    if (audioTracks.length > 0) {
-      console.log(`Using audio device: ${audioTracks[0].label}`);
-    }
-    if (videoTracks.length > 0) {
-      console.log(`Using video device: ${videoTracks[0].label}`);
-    }
-
-    pc1Local = new RTCPeerConnection(servers);
-    pc1Local.onicecandidate = iceCallback1Local;
-    localStream.getTracks().forEach(track => pc1Local.addTrack(track, localStream));
-    console.log('Adding local stream to pc1Local');
+    createPeers();
     
-    const offerOptions: RTCOfferOptions = {
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: true
-    };
-    
-    var offer = await pc1Local.createOffer(offerOptions)
-    pc1Local.setLocalDescription(offer);
-    socket.emit('rtc-request', offer)
+    // Send offers to remote peers
+    for (const peer of peers) {
+        var offer = await peer.peerConnection.createOffer();
+        await peer.peerConnection.setLocalDescription(offer);
+        socket.emit('peer-offer', { to: peer.remoteId, from: sessionId, sdp: offer.sdp });
+    }
 }
 
-socket.on('rtc-request-broadcast', (offer) => {
-    pc1Remote = new RTCPeerConnection(servers);
-    pc1Remote.ontrack = gotRemoteStream1;
-    pc1Remote.onicecandidate = iceCallback1Remote;
-    gotDescription1Local(offer);
+interface PeerOffer {
+    to: string
+    from: string
+    sdp: RTCSessionDescriptionInit
+}
 
+socket.on('peer-offer-direct', async (offer: PeerOffer) => {
+    createPeers();
+
+    // Figure out what server this offer is for, then accept it 
+    for (const peer of peers) {
+        console.log(peer.remoteId);
+        if (peer.remoteId == offer.from) {
+            console.log('Found!');
+
+            await peer.peerConnection.setRemoteDescription({ type: 'offer', sdp: offer.sdp });
+            const answer = await peer.peerConnection.createAnswer();
+            socket.emit('peer-accept', { to: peer.remoteId, from: sessionId, sdp: answer.sdp });
+            await peer.peerConnection.setLocalDescription(answer);
+        }
+    }
 });
 
-async function gotDescription1Local(desc) {
-  console.log(`Offer from pc1Local\n${desc.sdp}`);
-  await pc1Remote.setRemoteDescription(desc);
-
-  // Since the 'remote' side has no media stream we need
-  // to pass in the right constraints in order for it to
-  // accept the incoming offer of audio and video.
-  // AKA, simulate the existing 'local' video
-  await pc1Remote.setLocalDescription(desc);
-  var answer = await pc1Remote.createAnswer();
-
-  // Signal that the local (caller) should now pickup
-  socket.emit('rtc-response', answer);
-}
-
-socket.on('rtc-response-broadcast', (offerResponse) => 
-{
-    console.log(`Answer from pc1Remote\n${offerResponse.sdp}`);
-    pc1Local.setRemoteDescription(offerResponse);
+socket.on('peer-accept-direct', async (offer: PeerOffer) => {
+    // Figure out what server this acceptance is from, then finalize it
+    for (const peer of peers) {
+        console.log(peer.remoteId);
+        if (peer.remoteId == offer.from) {
+            console.log('Found!');
+            await peer.peerConnection.setRemoteDescription({type: 'answer', sdp: offer.sdp});
+        }
+    }
 });
 
 // Get the local video stream up and running.
