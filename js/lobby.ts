@@ -77,34 +77,19 @@ async function playVideoFromCamera(): Promise<MediaStream> {
     // For now, stick to something low-res for testing.
     const constraints = {
         'video': {        
-            width: { exact: 400 },
-            height: { exact: 300 },
+            width: { exact: 800 },
+            height: { exact: 600 },
         },
         'audio': true};
     const videoElement = document.querySelector('video#localVideo') as HTMLVideoElement;
 
     const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-    videoElement.srcObject = mediaStream;
+    
+    var videoOnlyStream = mediaStream.clone();
+    videoOnlyStream.removeTrack(videoOnlyStream.getAudioTracks()[0]);
+    videoElement.srcObject = videoOnlyStream;
+    
     return mediaStream;
-}
-
-function iceCallback1Local(event) {
-    handleCandidate(event.candidate, pc1Remote, 'pc1: ', 'local');
-  }
-  
-function iceCallback1Remote(event) {
-handleCandidate(event.candidate, pc1Local, 'pc1: ', 'remote');
-}
-
-function handleCandidate(candidate, dest, prefix, type) {
-    dest.addIceCandidate(candidate)
-        .then(() => {
-            console.log('AddIceCandidate success.');
-        }),
-        (error) => {
-                console.log(`Failed to add ICE candidate: ${error.toString()}`);
-        };
-    console.log(`${prefix}New ${type} ICE candidate: ${candidate ? candidate.candidate : '(null)'}`);
 }
 
 var localStream: MediaStream;
@@ -143,7 +128,16 @@ class Peer
             }
         }
 
-        // TODO ICE negotiation here
+        // Ensure that all ICE candidates are sent to the remote server
+        this.peerConnection.onicecandidate = iceEvent => {
+            if (iceEvent.candidate) {
+                console.log(iceEvent.candidate);
+                socket.emit('peer-ice', { to: this.remoteId, from: sessionId, 
+                    candidate: iceEvent.candidate.candidate,
+                    sdpMid: iceEvent.candidate.sdpMid,
+                    sdpMLineIndex: iceEvent.candidate.sdpMLineIndex });
+            }
+          };
 
         // Send the local webcam to the remote server
         const audioTracks = localStream.getAudioTracks();
@@ -173,7 +167,7 @@ function createPeers() {
             continue;
         }
         // Add a new HTML element for each client
-        remoteVideoSection.innerHTML += `<video id="remoteVideo-${client.id}" autoplay playsinline controls="false"></video>`;
+        remoteVideoSection.innerHTML += `<video id="remoteVideo-${client.id}" autoplay playsinline controls="false" style="width: 800px; height: 600px;"></video>`;
 
         // Create the peer
         var peer = new Peer(localStream, client.id);
@@ -195,7 +189,7 @@ async function connect() {
 interface PeerOffer {
     to: string
     from: string
-    sdp: RTCSessionDescriptionInit
+    sdp: string
 }
 
 socket.on('peer-offer-direct', async (offer: PeerOffer) => {
@@ -224,6 +218,26 @@ socket.on('peer-accept-direct', async (offer: PeerOffer) => {
             await peer.peerConnection.setRemoteDescription({type: 'answer', sdp: offer.sdp});
         }
     }
+});
+
+interface PeerIce {
+    to: string
+    from: string
+    candidate: string
+    sdpMid: string
+    sdpMLineIndex: number
+}
+
+socket.on('peer-ice-direct', async (ice: PeerIce) => {
+        // Figure out what server this ice candidate is from, then add it
+        for (const peer of peers) {
+            console.log(peer.remoteId);
+            if (peer.remoteId == ice.from) {
+                console.log('Found!');
+                await peer.peerConnection.addIceCandidate(
+                    { candidate: ice.candidate, sdpMid: ice.sdpMid, sdpMLineIndex: ice.sdpMLineIndex });
+            }
+        }
 });
 
 // Get the local video stream up and running.

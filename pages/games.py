@@ -59,7 +59,6 @@ def update_clients(message: dict):
         current_clients.append({ 'id': id, 'name': clients[id]['name'] })
     emit('current-clients', { 'clients': current_clients })
 
-## TODO need to handle candidates here so the clients can find each other.
 
 # Redirect peer offers to the peers they are requested of.
 @base.SOCKETIO.on('peer-offer')
@@ -74,3 +73,9 @@ def peer_offer(offer):
 def peer_accept(offer):
     print(offer['to'])
     emit('peer-accept-direct', offer, to=offer['to'])
+
+
+@base.SOCKETIO.on('peer-ice')
+def peer_accept(offer):
+    print(offer['to'])
+    emit('peer-ice-direct', offer, to=offer['to'])
