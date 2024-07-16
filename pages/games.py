@@ -1,7 +1,8 @@
-from datetime import datetime 
-import json
-import threading
+from datetime import datetime
 from dataclasses import dataclass
+import json
+import os
+from pathlib import Path
 from flask import Blueprint, render_template
 from flask_socketio import emit
 
@@ -46,7 +47,7 @@ def update_clients(message: dict):
 
     # Name and keep-alive update
     now = datetime.now()
-    client_state = { 'name': message['name'], 'lastUpdate': now }
+    client_state = { 'name': message['name'], 'lastUpdate': now, 'ready': message['ready'] }
     clients[id] = client_state
 
     # Required for inline deletion
@@ -56,7 +57,7 @@ def update_clients(message: dict):
 
     current_clients = []
     for id in clients.keys():
-        current_clients.append({ 'id': id, 'name': clients[id]['name'] })
+        current_clients.append({ 'id': id, 'name': clients[id]['name'], 'ready': clients[id]['ready'] })
     emit('current-clients', { 'clients': current_clients })
 
 
@@ -74,8 +75,16 @@ def peer_accept(offer):
     print(offer['to'])
     emit('peer-accept-direct', offer, to=offer['to'])
 
-
 @base.SOCKETIO.on('peer-ice')
-def peer_accept(offer):
+def peer_ice(offer):
     print(offer['to'])
     emit('peer-ice-direct', offer, to=offer['to'])
+
+# Load the TURN server at runtime to make it more easily configurable.
+script_path = os.path.abspath(os.path.dirname(__file__))
+file_path = Path(os.path.join(script_path, 'turn-details.json'))
+turn_server = json.loads(file_path.read_text())
+
+@base.SOCKETIO.on('turn-server-request')
+def turn_details():
+    emit('turn-server-response', turn_server)

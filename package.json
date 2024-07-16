@@ -21,6 +21,7 @@
     "@babylonjs/materials": "^7.0.0",
     "@picocss/pico": "^2.0.6",
     "htmx.org": "^1.9.11",
+    "jsframe.js": "^1.6.8",
     "katex": "^0.16.10",
     "socket.io-client": "^4.7.5"
   }

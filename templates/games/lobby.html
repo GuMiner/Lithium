@@ -2,11 +2,23 @@
 
 {% block content %}
 {% include "_games_header.html" %}
-<blockquote>
-    Push this button first
-    <br/>
-    <button id="cameraStart" onclick="cameraStart()">Start Camera and Mic</button>
-</blockquote>
+
+<br />
+<div class="grid fit-content">
+    <label for="userName">Name</label>
+    <input type="text" id="userName">
+    <div class="expandable-border" style="width: 600px;">
+        <form id="chatForm">
+            <div class="grid fit-content">
+                <label for="chatEntry">Chat</label>
+                <input id="chatEntry" type="text"></input>
+                <button type="submit">Send</button>
+            </div>
+        </form>
+        <div class="expandable-border" id="chatResponse">
+        </div>
+    </div>
+</div>
 <div>
     <h3>Online users <i><small>[2 second delay, 10 second timeout]</small></i></h3>
     <div id="currentClients">
@@ -14,28 +26,17 @@
     </div>
 </div>
 
-<form id="connectForm">
-    <div class="grid fit-content">
-        Name
-        <input type="text" id="userName">
-        <button type="submit">Connect</button>
-    </div>
-</form>
-<div class="expandable-border">
-    <form id="chatForm">
-        <div class="grid fit-content">
-            Chat
-            <input id="chatEntry" type="text" ></input>
-            <button type="submit">Send</button>
-        </div>
-    </form>
-    <div class="expandable-border" id="chatResponse">
+<blockquote>
+    Push this button to start your local video
+    <br/>
+    <button type="button" onclick="cameraStart()">Start Camera and Mic</button>
+</blockquote>
+<div id="waitForCamera" style="display: none;">
+    <blockquote>
+        Push this button to connect to other (ready) users.
         <br/>
-    </div>
-</div>
-
-<video id="localVideo" autoplay playsinline controls="false"></video>
-<div id="remoteVideos"> 
+        <button type="button" onclick="connect()">Connect</button>
+    </blockquote>
 </div>
 {% endblock content %}
 

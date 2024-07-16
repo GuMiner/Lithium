@@ -175,3 +175,4 @@ static/fonts/*
 # Secure data
 secure.conf
 valid-external-links.txt
+turn-details.json
