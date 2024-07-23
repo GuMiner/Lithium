@@ -1,9 +1,7 @@
 import { Socket, io } from "socket.io-client";
-import { JSFrame } from 'jsframe.js';
 
 // Connect to the server, setting the session ID and getting the TURN server details.
 const socket: Socket = io();
-const jsFrame: JSFrame = new JSFrame();
 
 var sessionId = '';
 socket.on("connect", () => {
@@ -38,15 +36,20 @@ setInterval(function() {
         }
         socket.emit('client-update', { id: sessionId, name: name, ready: localStream != null });
     }
-}, 2000);
+}, 1000);
 
 interface Client {
     id: string,
-    name: string
+    name: string,
+    ready: boolean
+}
+
+interface CurrentClients {
+    clients: Client[]
 }
 
 var lastKnownClients: Client[] = null;
-socket.on('current-clients', (data) => {
+socket.on('current-clients', (data: CurrentClients) => {
     var prefix = '<ul>';
     var suffix = '</ul>';
     let clients = '';
@@ -78,33 +81,6 @@ socket.on('chat-server', (data) => {
     document.getElementById('chatResponse').innerHTML += `<br/>${data.data}`
 });
 
-function createFloatingVideoFrame(title: string, videoElementId: string, stream: MediaStream) {
-    const frame = jsFrame.create({
-        title: title,
-        left: 20 + Math.random() * 400, top: 20, width: 400, height: 300,
-        movable: true, //Enable to be moved by mouse
-        resizable: true, //Enable to be resized by mouse
-        html: `<video id="${videoElementId}" class="video-insert" autoplay playsinline></video>`
-    });
-    frame.show();
-
-    // Ensure that the inline frame resizes to match the video resolution
-    var localVideo = (document.getElementById(videoElementId) as HTMLVideoElement);
-    localVideo.srcObject = stream;
-    localVideo.onresize = function() {
-        console.log(`${title}: ${localVideo.videoWidth}x${localVideo.videoHeight}`);
-        frame.setSize(localVideo.videoWidth, localVideo.videoHeight + 20);
-    };
-
-    // Ensure that frame resizes can affect the local video too
-    frame.on('frame', 'resize', (data) => {
-        localVideo.width = data.size.width;
-        localVideo.height = data.size.height - 20;
-     });
- 
-    return frame;
-}
-
 async function playVideoFromCamera(): Promise<MediaStream> {
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
     // You can specify more constraints, but the defaults are good enough for my use case
@@ -117,8 +93,13 @@ async function playVideoFromCamera(): Promise<MediaStream> {
     var videoOnlyStream = mediaStream.clone();
     videoOnlyStream.removeTrack(videoOnlyStream.getAudioTracks()[0]);
 
-    createFloatingVideoFrame(`${userName}'s video`, "localVideo", videoOnlyStream);
+    document.getElementById("localVideos")
+        .innerHTML += `<video id="localVideo" class="video-insert" autoplay playsinline></video>`
 
+    // Ensure that the inline frame resizes to match the video resolution
+    var localVideo = (document.getElementById("localVideo") as HTMLVideoElement);
+    localVideo.srcObject = videoOnlyStream;
+    
     // Unhide the rest of the UI
     document.getElementById('waitForCamera').removeAttribute('style');
     return mediaStream;
@@ -127,33 +108,28 @@ async function playVideoFromCamera(): Promise<MediaStream> {
 class Peer
 {
     peerConnection: RTCPeerConnection;
-    remoteName: string;
     remoteId: string;
-    remoteVideoFrame: any;
 
-    constructor(localStream: MediaStream, clientName: string, clientId: string) {
+    constructor(localStream: MediaStream, clientId: string) {
         this.peerConnection = new RTCPeerConnection(servers);
-        this.remoteName = clientName;
         this.remoteId = clientId;
-        this.remoteVideoFrame = null;
+
+        document.getElementById("remoteVideos")
+            .innerHTML += `<video id="remoteVideo-${this.remoteId}" class="video-insert" autoplay playsinline></video>`
 
         // Ensure that if a remote webcam is received, it is displayed appropriately.
         this.peerConnection.ontrack = (trackEvent) => {
-            if (this.remoteVideoFrame == null) {
-                console.log(`Received remote stream from ${clientId}`);
-                this.remoteVideoFrame = createFloatingVideoFrame(`${this.remoteName}'s video`, `remoteVideo-${this.remoteId}`, trackEvent.streams[0]);
-            } else {
-                var videoElement = document.getElementById(`remoteVideo-${this.remoteId}`) as HTMLVideoElement;
-                if (videoElement.srcObject !== trackEvent.streams[0]) {
-                    videoElement.srcObject = trackEvent.streams[0];
-                }
+            console.log(`Received remote stream from ${clientId}`);
+            var videoElement = document.getElementById(`remoteVideo-${this.remoteId}`) as HTMLVideoElement;
+            if (videoElement.srcObject !== trackEvent.streams[0]) {
+                videoElement.srcObject = trackEvent.streams[0];
             }
         }
 
         // Ensure that all ICE candidates are sent to the remote server
         this.peerConnection.onicecandidate = iceEvent => {
             if (iceEvent.candidate) {
-                console.log(iceEvent.candidate);
+                console.log(`Sending ICE candidate to ${this.remoteId}`);
                 socket.emit('peer-ice', { to: this.remoteId, from: sessionId, 
                     candidate: iceEvent.candidate.candidate,
                     sdpMid: iceEvent.candidate.sdpMid,
@@ -162,8 +138,9 @@ class Peer
           };
 
         // Send the local webcam to the remote server
-        const audioTracks = localStream.getAudioTracks();
-        const videoTracks = localStream.getVideoTracks();
+        var peerStream = localStream.clone();
+        const audioTracks = peerStream.getAudioTracks();
+        const videoTracks = peerStream.getVideoTracks();
         if (audioTracks.length > 0) {
             console.log(`Using audio device: ${audioTracks[0].label}`);
         }
@@ -171,41 +148,52 @@ class Peer
             console.log(`Using video device: ${videoTracks[0].label}`);
         }
 
-        localStream.getTracks().forEach(track => this.peerConnection.addTrack(track, localStream));
+        peerStream.getTracks().forEach(track => this.peerConnection.addTrack(track, peerStream));
     }
 };
 
-// TODO could rearchitect this into a mapping of peers based off of their IDs, however that's not necessary for this example app.
-var peers: Peer[] = [];
+var peers: { [id: string]: Peer; } = {};
 
-function createPeers() {
-    for (const peer of peers) {
-        if (peer.remoteVideoFrame != null) {
-            peer.remoteVideoFrame.hide();
-        }
-    }
-    
-    peers = [];
-    for (const client of lastKnownClients) {
-        if (client.id == sessionId) {
-            // No peer for the current user, they have their own video feed already.
-            continue;
-        }
-
-        // Create the peer
-        var peer = new Peer(localStream, client.name, client.id);
-        peers.push(peer);
+async function createAndSendPeerOfferIfMissing(client: Client) {
+    if (client.ready && !(client.id in peers)) {
+        var peer = new Peer(localStream, client.id);
+        peers[client.id] = peer;
+        await sendPeerOffer(peer);
     }
 }
 
-async function connect() {
-    // Start connection by initializing the list of peers
-    createPeers();
-    
-    // Send offers to remote peers
-    for (const peer of peers) {
-        await sendPeerOffer(peer);
+var connectTriggered: boolean = false;
+async function connectToReadyPeers() {
+    // Add new peers that are missing
+    for (const client of lastKnownClients) {
+        if (client.id == sessionId) {
+            // Skip the current user
+            continue;
+        }
+        
+        await createAndSendPeerOfferIfMissing(client);
     }
+
+    // Remove dead peers that no longer are present
+    for (const peerId in peers) {
+        var foundClient = false;
+        for (const client of lastKnownClients) {
+            if (client.id == peerId) {
+                foundClient = true;
+                break;
+            }
+        }
+
+        if (!foundClient) {
+            delete peers[peerId];
+            document.getElementById(`remoteVideo-${peerId}`).remove();
+        }
+    }
+}
+
+function connect() {
+    connectTriggered = true;
+    setInterval(connectToReadyPeers, 1000);
 }
 
 async function sendPeerOffer(peer: Peer) {
@@ -221,6 +209,11 @@ async function acceptPeerOffer(peer: Peer, offer: PeerOffer) {
     await peer.peerConnection.setLocalDescription(answer);
 }
 
+async function ackOfferAcceptance(peer: Peer, offer: PeerOffer) {
+    console.log(`Peer ${peer.remoteId} accepted offer from this peer ${sessionId}`);
+    await peer.peerConnection.setRemoteDescription({type: 'answer', sdp: offer.sdp});
+}
+
 interface PeerOffer {
     to: string
     from: string
@@ -228,36 +221,29 @@ interface PeerOffer {
 }
 
 socket.on('peer-offer-direct', async (offer: PeerOffer) => {
-    // We have received a request to connect, ensure there exist peers to connect to/from.
-    if (peers.length == 0) {
-        createPeers();
+    // We have received a request to connect. Find or create the appropriate peer
+    if (offer.from in peers) {
+        console.log(`Found peer ${peer.remoteId} for offer.`);;
+    } else {
+        var peer = new Peer(localStream, offer.from);
+        peers[offer.from] = peer;
+        console.log(`Created peer ${peer.remoteId} for offer.`);
     }
 
-    // Figure out what server this offer is for, then accept it 
-    for (const peer of peers) {
-        console.log(peer.remoteId);
-        if (peer.remoteId == offer.from) {
-            console.log(`Found peer ${peer.remoteId} for offer.`);
-            await acceptPeerOffer(peer, offer);
-        } else if (peer.remoteId == sessionId) {
-            // Do nothing for ourselves
-            continue;
-        } else if (peer.remoteId > sessionId) {
-            // If a peer is lower for other peers, trigger the offer/acceptance process for them.
-            // This ensures that a true P2P connection is established between all participants.
-            await sendPeerOffer(peer);
-        }
+    await acceptPeerOffer(peers[offer.from], offer);
+
+    if (!connectTriggered) {
+        // If someone starts the call, automatically join in to ensure proper 3rd-party P2P connections.
+        connect();
     }
 });
 
 socket.on('peer-accept-direct', async (offer: PeerOffer) => {
-    // Figure out what server this acceptance is from, then finalize it
-    for (const peer of peers) {
-        console.log(peer.remoteId);
-        if (peer.remoteId == offer.from) {
-            console.log(`Peer ${peer.remoteId} accepted offer from this peer ${sessionId}`);
-            await peer.peerConnection.setRemoteDescription({type: 'answer', sdp: offer.sdp});
-        }
+    // Finalize acceptance of an offer, ignore unexpected messages
+    if (offer.from in peers) {
+        await ackOfferAcceptance(peers[offer.from], offer);
+    } else {
+        console.warn(`Unexpected acceptance from ${offer.from}`);
     }
 });
 
@@ -270,15 +256,15 @@ interface PeerIce {
 }
 
 socket.on('peer-ice-direct', async (ice: PeerIce) => {
-        // Figure out what server this ice candidate is from, then add it
-        for (const peer of peers) {
-            console.log(peer.remoteId);
-            if (peer.remoteId == ice.from) {
-                console.log(`Added ICE candidate from ${peer.remoteId}`);
-                await peer.peerConnection.addIceCandidate(
-                    { candidate: ice.candidate, sdpMid: ice.sdpMid, sdpMLineIndex: ice.sdpMLineIndex });
-            }
-        }
+    // Figure out what server this ice candidate is from, then add it
+    if (ice.from in peers) {
+        var peer = peers[ice.from];
+        console.log(`Added ICE candidate from ${peer.remoteId}`);
+        await peer.peerConnection.addIceCandidate(
+            { candidate: ice.candidate, sdpMid: ice.sdpMid, sdpMLineIndex: ice.sdpMLineIndex });
+    } else {
+        console.warn(`Unexpected ice candidate from ${ice.from}`);
+    }
 });
 
 // Get the local video stream up and running.

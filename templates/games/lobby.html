@@ -20,23 +20,33 @@
     </div>
 </div>
 <div>
-    <h3>Online users <i><small>[2 second delay, 10 second timeout]</small></i></h3>
+    <h3>Online users <i><small>[1 second delay, 5 second timeout]</small></i></h3>
     <div id="currentClients">
-        <ul><li>Loading...</li></ul>
+        <ul>
+            <li>Loading...</li>
+        </ul>
     </div>
 </div>
 
-<blockquote>
-    Push this button to start your local video
-    <br/>
-    <button type="button" onclick="cameraStart()">Start Camera and Mic</button>
-</blockquote>
-<div id="waitForCamera" style="display: none;">
-    <blockquote>
-        Push this button to connect to other (ready) users.
-        <br/>
-        <button type="button" onclick="connect()">Connect</button>
-    </blockquote>
+<div class="grid">
+    <div>
+        <blockquote>
+            Push this button to start your local video
+            <br />
+            <button type="button" onclick="cameraStart()">Start Camera and Mic</button>
+        </blockquote>
+        <div id="waitForCamera" style="display: none;">
+            <blockquote>
+                Push this button to start connecting to (ready) users.
+                <br />
+                <button type="button" onclick="connect()">Connect</button>
+            </blockquote>
+        </div>
+    </div>
+    <div id="localVideos"></div>
+</div>
+<div id="remoteVideos" class="grid">
+
 </div>
 {% endblock content %}
 

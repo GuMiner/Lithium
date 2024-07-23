@@ -52,7 +52,7 @@ def update_clients(message: dict):
 
     # Required for inline deletion
     for id in list(clients.keys()):
-        if (now - clients[id]['lastUpdate']).seconds > 10:
+        if (now - clients[id]['lastUpdate']).seconds > 5:
             del clients[id]
 
     current_clients = []
