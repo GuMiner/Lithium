@@ -47,7 +47,7 @@ def update_clients(message: dict):
 
     # Name and keep-alive update
     now = datetime.now()
-    client_state = { 'name': message['name'], 'lastUpdate': now, 'ready': message['ready'] }
+    client_state = { 'name': message['name'], 'lastUpdate': now, 'state': message['state'] }
     clients[id] = client_state
 
     # Required for inline deletion
@@ -57,7 +57,7 @@ def update_clients(message: dict):
 
     current_clients = []
     for id in clients.keys():
-        current_clients.append({ 'id': id, 'name': clients[id]['name'], 'ready': clients[id]['ready'] })
+        current_clients.append({ 'id': id, 'name': clients[id]['name'], 'state': clients[id]['state'] })
     emit('current-clients', { 'clients': current_clients })
 
 
@@ -66,18 +66,14 @@ def update_clients(message: dict):
 def peer_offer(offer):
     # By default, each client is in their own room, named by session ID.
     # https://flask-socketio.readthedocs.io/en/latest/getting_started.html#rooms
-    
-    print(offer['to'])
     emit('peer-offer-direct', offer, to=offer['to'])
 
 @base.SOCKETIO.on('peer-accept')
 def peer_accept(offer):
-    print(offer['to'])
     emit('peer-accept-direct', offer, to=offer['to'])
 
 @base.SOCKETIO.on('peer-ice')
 def peer_ice(offer):
-    print(offer['to'])
     emit('peer-ice-direct', offer, to=offer['to'])
 
 # Load the TURN server at runtime to make it more easily configurable.
