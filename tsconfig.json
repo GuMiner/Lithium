@@ -3,6 +3,7 @@
         "module": "esNext",
         "target": "es5",
         "moduleResolution": "node",
-        "lib": [ "dom", "es2015" ]
+        "lib": [ "dom", "es2015" ],
+        "types": ["@webgpu/types"]
     }
 }

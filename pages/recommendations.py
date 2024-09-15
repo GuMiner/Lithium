@@ -53,6 +53,7 @@ referenceSets = [
             Reference("Game Design IDE (Unity)", "https://unity3d.com/"),
             Reference("Code Management (git)", "https://git-scm.com/"),
             Reference("GPU Render Analysis (RenderDoc)", "https://renderdoc.org/"),
+            Reference("OpenGl/WebGl/WebGPU", "https://math.hws.edu/graphicsbook/"),
         ])
     ]),
     ReferenceSet([
@@ -88,7 +89,7 @@ referenceSets = [
     ReferenceSet([
         ReferenceGroup("Web Development", "June 2024", [
             Reference("HTML / CSS / JS reference", "https://developer.mozilla.org/en-US/"),
-            Reference("CSS Grid details", "https://learncssgrid.com/")
+            Reference("CSS Grid details", "https://learncssgrid.com/"),
         ]),
         ReferenceGroup("Machine Learning", "June 2024", [
             Reference("Models and tooling (Hugging Face)", "https://huggingface.co/"),
