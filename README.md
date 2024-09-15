@@ -35,6 +35,7 @@ esbuild js/index.ts --bundle --outdir=static --sourcemap
 esbuild js/puzzle.ts --bundle --outdir=static --sourcemap
 esbuild js/game.ts --bundle --outdir=static --sourcemap
 esbuild js/lobby.ts --bundle --outdir=static --sourcemap
+esbuild js/traces.ts --bundle --outdir=static --sourcemap
 esbuild js/math.ts --bundle  "--external:fonts/KaTeX*" --outdir=static --sourcemap 
 
 flask --debug run

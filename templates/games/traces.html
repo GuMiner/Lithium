@@ -1,0 +1,12 @@
+{% extends '_base.html' %}
+
+{% block content %}
+{% include "_games_header.html" %}
+<button type="button" id="fullscreenButton" onclick="enterFullscreen()">Enter Fullscreen</button>
+<div id="canvasDiv">
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript" src="/static/traces.js"></script>
+{% endblock scripts %}

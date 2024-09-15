@@ -21,6 +21,7 @@ def index():
     game_cards = [
         Game("blocks", "/static/game/icons/blocks.png", "/games/blocks"),
         Game("lobby", "/static/game/icons/pending.png", "/games/lobby"),
+        Game("traces", "/static/game/icons/traces.png", "/games/traces"),
     ]
 
     return render_template("games/games.html", games=game_cards)
@@ -33,13 +34,17 @@ def blocks():
 def lobby():
     return render_template("lobby.html")
 
+@games.route("/traces")
+def traces():
+    return render_template("traces.html")
+
+# Lobby socketio functions
 @base.SOCKETIO.on('chat-client')
 def sync(message):
     emit('chat-server', {'data': f"{message['name']}: {message['message']}"}, broadcast=True)
     
 clients = {}
 
-# Lobby socketio functions
 @base.SOCKETIO.on('client-update')
 def update_clients(message: dict):
     

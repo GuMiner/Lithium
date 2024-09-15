@@ -163,6 +163,7 @@ static/game.*
 static/math.*
 static/lobby.*
 static/puzzle.*
+static/traces.*
 
 # Database info
 db/*
