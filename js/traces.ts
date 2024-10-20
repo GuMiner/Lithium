@@ -1,30 +1,101 @@
-import "./traces/utility.ts";
+import { getFile, renderErrorMessage } from "./traces/utility";
 // TODO this import is incorrect and needs fixing
 
 var canvasDiv = null;
 
 // The best WebGPU source I've found is https://math.hws.edu/graphicsbook/
 
-
 class Program {
     shader: GPUShaderModule;
+    
+    vertexBuffer: GPUBuffer;
+    uniformBuffer: GPUBuffer;
+    uniformBindGroup: GPUBindGroup;
+    pipeline: GPURenderPipeline;
 
-    constructor(shaderUri: string) {
-        // TODO: Figure out a better way to return a real Program while also not 
-        // having an extra method and keeping the construction logic hereabouts.
-        return (async () => {
-            const shaderSource = await getFile(shaderUri);
+    // This structure is because TypeScript does not allow async constructors.
+    protected constructor(shader: GPUShaderModule) {
+        this.shader = shader;
 
-            device.pushErrorScope("validation");
-            this.shader = device.createShaderModule({ code: shaderSource });
+        // TODO -- these belong in a subclass, somehow.
+        this.uniformBuffer = device.createBuffer({
+            size: 3 * 4,
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        });
+
+        let uniformFragmentLayout: GPUBindGroupLayoutEntry = {
+            binding: 0,
+            visibility: GPUShaderStage.FRAGMENT,
+            buffer: { type: "uniform" }
+        };
+        let uniformBindGroupLayout = device.createBindGroupLayout({ entries: [uniformFragmentLayout] });
+
+        // vec3f(4-byte) color
+        this.uniformBindGroup = device.createBindGroup({
+            layout: uniformBindGroupLayout,
+            entries: [{
+                binding: 0,
+                resource: { buffer: this.uniformBuffer, offset: 0, size: 3 * 4 }
+                }
+            ]
+        });
+
+        const vertexCoords = new Float32Array([   // 2D coords for drawing a triangle.
+            -0.8, -0.6, 0.8, -0.6, 0, 0.7
+        ]); // X-1=Left, X+1=Right, Y-1=Bottom, Y+1=Top
+    
+        this.vertexBuffer = device.createBuffer({
+            size: vertexCoords.byteLength,
+            usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+        });
+    
+        device.queue.writeBuffer(this.vertexBuffer, 0, vertexCoords);
+
         
-            let error = await device.popErrorScope();
-            if (error) {
-                // The WebGPU context is at this point setup, so swapping the context to 2D doesn't work
-                throw Error("Compilation error in shader!");
-            }
-            return this;
-        })() as unknown as Program;
+        let vertexBufferLayout: GPUVertexBufferLayout[] = [ // An array of vertex buffer specifications.
+        {
+            attributes: [{ shaderLocation: 0, offset: 0, format: "float32x2" } as GPUVertexAttribute],
+            arrayStride: 8,
+            stepMode: "vertex"
+        }];
+    
+        
+        let gpuPipelineLayout = device.createPipelineLayout({ bindGroupLayouts: [uniformBindGroupLayout] });
+        let pipelineDescriptor: GPURenderPipelineDescriptor = {
+            vertex: { // Configuration for the vertex shader.
+                module: this.shader,
+                entryPoint: "vertexMain",
+                buffers: vertexBufferLayout
+            },
+            fragment: { // Configuration for the fragment shader.
+                module: this.shader,
+                entryPoint: "fragmentMain",
+                targets: [{
+                    format: navigator.gpu.getPreferredCanvasFormat()
+                }]
+            },
+            primitive: {
+                topology: "triangle-list"
+            },
+            layout: gpuPipelineLayout
+        };
+        
+        this.pipeline = device.createRenderPipeline(pipelineDescriptor);
+    }
+
+    static async new(shaderUri: string): Promise<Program> {
+        const shaderSource = await getFile(shaderUri);
+
+        device.pushErrorScope("validation");
+        const shader = device.createShaderModule({ code: shaderSource });
+    
+        let error = await device.popErrorScope();
+        if (error) {
+            // The WebGPU context is at this point setup, so swapping the context to 2D doesn't work
+            throw Error("Compilation error in shader!");
+        }
+
+        return new Program(shader);
     }
 }
 
@@ -32,10 +103,6 @@ let triangleProgram: Program;
 
 let device: GPUDevice;
 let context: GPUCanvasContext;
-let pipeline: GPURenderPipeline;
-let vertexBuffer: GPUBuffer;
-let uniformBuffer: GPUBuffer;
-let uniformBindGroup: GPUBindGroup;
 
 async function initDeviceAndContext(canvas): Promise<boolean> {
     if (!navigator.gpu) {
@@ -71,68 +138,7 @@ async function initWebGPU(canvas): Promise<boolean> {
     }
 
     // Just some samples to get off of the ground
-    triangleProgram = await new Program("/static/game/gpu/triangle.wgsl");
-
-    let vertexBufferLayout: GPUVertexBufferLayout[] = [ // An array of vertex buffer specifications.
-    {
-        attributes: [{ shaderLocation: 0, offset: 0, format: "float32x2" } as GPUVertexAttribute],
-        arrayStride: 8,
-        stepMode: "vertex"
-    }];
-
-    let uniformFragmentLayout: GPUBindGroupLayoutEntry = {
-        binding: 0,
-        visibility: GPUShaderStage.FRAGMENT,
-        buffer: { type: "uniform" }
-    };
-    let uniformBindGroupLayout = device.createBindGroupLayout({ entries: [uniformFragmentLayout] });
-    let gpuPipelineLayout = device.createPipelineLayout({ bindGroupLayouts: [uniformBindGroupLayout] });
-    let pipelineDescriptor: GPURenderPipelineDescriptor = {
-        vertex: { // Configuration for the vertex shader.
-            module: triangleProgram.shader,
-            entryPoint: "vertexMain",
-            buffers: vertexBufferLayout
-        },
-        fragment: { // Configuration for the fragment shader.
-            module: triangleProgram.shader,
-            entryPoint: "fragmentMain",
-            targets: [{
-                format: navigator.gpu.getPreferredCanvasFormat()
-            }]
-        },
-        primitive: {
-            topology: "triangle-list"
-        },
-        layout: gpuPipelineLayout
-    };
-
-    pipeline = device.createRenderPipeline(pipelineDescriptor);
-
-    uniformBuffer = device.createBuffer({
-        size: 3 * 4,
-        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-    });
-
-    uniformBindGroup = device.createBindGroup({
-        layout: uniformBindGroupLayout,
-        entries: [
-            {
-                binding: 0, // Corresponds to the binding 0 in the layout.
-                resource: { buffer: uniformBuffer, offset: 0, size: 3 * 4 }
-            }
-        ]
-    });
-
-    const vertexCoords = new Float32Array([   // 2D coords for drawing a triangle.
-        -0.8, -0.6, 0.8, -0.6, 0, 0.7
-    ]); // X-1=Left, X+1=Right, Y-1=Bottom, Y+1=Top
-
-    vertexBuffer = device.createBuffer({
-        size: vertexCoords.byteLength,
-        usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
-    });
-
-    device.queue.writeBuffer(vertexBuffer, 0, vertexCoords);
+    triangleProgram = await Program.new("/static/game/gpu/triangle.wgsl");
 
     return true;
 }
@@ -177,7 +183,7 @@ function renderFrame() {
     let timeDelta = (now - previousTime) / 1000; 
     previousTime = now;
 
-    device.queue.writeBuffer(uniformBuffer, 0, new Float32Array([Math.random(), 0.5, 0.8]));
+    device.queue.writeBuffer(triangleProgram.uniformBuffer, 0, new Float32Array([Math.random(), 0.5, 0.8]));
 
 
     let colorAttachment: GPURenderPassColorAttachment = {
@@ -192,9 +198,9 @@ function renderFrame() {
     let renderPassDescriptor: GPURenderPassDescriptor = { colorAttachments: [colorAttachment] };
 
     let passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
-    passEncoder.setPipeline(pipeline);            // Specify pipeline.
-    passEncoder.setVertexBuffer(0, vertexBuffer);  // Attach vertex buffer.
-    passEncoder.setBindGroup(0, uniformBindGroup); // Attach bind group.
+    passEncoder.setPipeline(triangleProgram.pipeline);            // Specify pipeline.
+    passEncoder.setVertexBuffer(0, triangleProgram.vertexBuffer);  // Attach vertex buffer.
+    passEncoder.setBindGroup(0, triangleProgram.uniformBindGroup); // Attach bind group.
     passEncoder.draw(3);                          // Generate vertices.
     passEncoder.end();
 

@@ -1,4 +1,4 @@
-function renderErrorMessage(canvas, ...errorMessages: String[]) {
+export function renderErrorMessage(canvas, ...errorMessages: String[]) {
     const context = canvas.getContext("2d");
 
     context.font = "20px Helvetica";
@@ -9,7 +9,7 @@ function renderErrorMessage(canvas, ...errorMessages: String[]) {
     }
 }
 
-async function getFile(url: string): Promise<string> {
+export async function getFile(url: string): Promise<string> {
     const response = await fetch(url, { method: 'GET' });
     if (!response.ok) {
         console.error(`HTTP ${response.status} ${await response.text()}`);
