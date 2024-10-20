@@ -8,14 +8,19 @@ REM Copy over what may have changed
 echo cd /home/lithium/site
 echo lcd C:\Users\gusgr\Desktop\lithium
 
-echo put -mirror -erase templates templates
-echo put -mirror -erase pages pages
+REM echo put -mirror -erase templates templates
+REM echo put -mirror -erase pages pages
 echo put -o app.py
 
 echo cd /home/lithium/site/static
 echo lcd C:\Users\gusgr\Desktop\lithium\static
-echo put -o lobby.js
-echo put -o lobby.js.map
+echo put -o traces.js
+echo put -o traces.js.map
+
+echo cd /home/lithium/site/static/game
+echo lcd C:\Users\gusgr\Desktop\lithium\static\game
+echo put -mirror -erase gpu gpu
+
 ) | sftpc root@146.190.161.9:22 -pk=auto
 
 REM add the following line to the above if the DB changes:

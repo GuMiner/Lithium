@@ -1,6 +1,34 @@
+import "./traces/utility.ts";
+// TODO this import is incorrect and needs fixing
+
 var canvasDiv = null;
 
 // The best WebGPU source I've found is https://math.hws.edu/graphicsbook/
+
+
+class Program {
+    shader: GPUShaderModule;
+
+    constructor(shaderUri: string) {
+        // TODO: Figure out a better way to return a real Program while also not 
+        // having an extra method and keeping the construction logic hereabouts.
+        return (async () => {
+            const shaderSource = await getFile(shaderUri);
+
+            device.pushErrorScope("validation");
+            this.shader = device.createShaderModule({ code: shaderSource });
+        
+            let error = await device.popErrorScope();
+            if (error) {
+                // The WebGPU context is at this point setup, so swapping the context to 2D doesn't work
+                throw Error("Compilation error in shader!");
+            }
+            return this;
+        })() as unknown as Program;
+    }
+}
+
+let triangleProgram: Program;
 
 let device: GPUDevice;
 let context: GPUCanvasContext;
@@ -9,20 +37,7 @@ let vertexBuffer: GPUBuffer;
 let uniformBuffer: GPUBuffer;
 let uniformBindGroup: GPUBindGroup;
 
-let shader: GPUShaderModule;
-
-function renderErrorMessage(canvas, ...errorMessages: String[]) {
-    const context = canvas.getContext("2d");
-
-    context.font = "20px Helvetica";
-    let yOffset = 40;
-    for (let errorMessage of errorMessages) {
-        context.fillText(errorMessage, 10, yOffset);
-        yOffset = yOffset + 28;
-    }
-}
-
-async function initWebGPU(canvas): Promise<boolean> {
+async function initDeviceAndContext(canvas): Promise<boolean> {
     if (!navigator.gpu) {
         renderErrorMessage(canvas, "WebGPU is not supported in this browser.",
             "If on Firefox, enable WebGPU by:",
@@ -47,29 +62,16 @@ async function initWebGPU(canvas): Promise<boolean> {
         alphaMode: "premultiplied",
     });
 
-    // Just some samples to get off of the ground
-    const shaderSource = ` 
-        @group(0) @binding(0) var<uniform> color : vec3f;
+    return true;
+}
 
-        @vertex
-        fn vertexMain( @location(0) coords : vec2f ) -> @builtin(position) vec4f {
-            return vec4f( coords, 0, 1 );
-        }
-        
-        @fragment
-        fn fragmentMain() -> @location(0) vec4f {
-            return vec4f( color, 1 ); 
-        }
-        `;
-
-    device.pushErrorScope("validation");
-    shader = device.createShaderModule({ code: shaderSource });
-
-    let error = await device.popErrorScope();
-    if (error) {
-        // The WebGPU context is at this point setup, so swapping the context to 2D doesn't work
-        throw Error("Compilation error in shader!");
+async function initWebGPU(canvas): Promise<boolean> {
+    if (!await initDeviceAndContext(canvas)) {
+        return false;
     }
+
+    // Just some samples to get off of the ground
+    triangleProgram = await new Program("/static/game/gpu/triangle.wgsl");
 
     let vertexBufferLayout: GPUVertexBufferLayout[] = [ // An array of vertex buffer specifications.
     {
@@ -87,12 +89,12 @@ async function initWebGPU(canvas): Promise<boolean> {
     let gpuPipelineLayout = device.createPipelineLayout({ bindGroupLayouts: [uniformBindGroupLayout] });
     let pipelineDescriptor: GPURenderPipelineDescriptor = {
         vertex: { // Configuration for the vertex shader.
-            module: shader,
+            module: triangleProgram.shader,
             entryPoint: "vertexMain",
             buffers: vertexBufferLayout
         },
         fragment: { // Configuration for the fragment shader.
-            module: shader,
+            module: triangleProgram.shader,
             entryPoint: "fragmentMain",
             targets: [{
                 format: navigator.gpu.getPreferredCanvasFormat()
@@ -210,3 +212,11 @@ window.addEventListener("resize", () => {
     // canvas.setAttribute('height', cssHeight);
     // console.log(`${cssWidth}x${cssHeight}`)
 });
+
+window.addEventListener('keyup', (ev) => {
+    console.log(`${ev.code} ${ev.key}`);
+});
+
+window.addEventListener('keydown', (ev) => {
+    console.log(`${ev.code} ${ev.key}`);
+}); 

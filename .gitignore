@@ -164,6 +164,7 @@ static/math.*
 static/lobby.*
 static/puzzle.*
 static/traces.*
+static/traces/utility.*
 
 # Database info
 db/*
