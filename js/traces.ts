@@ -1,14 +1,22 @@
-import { getFile, renderErrorMessage } from "./traces/utility";
-// TODO this import is incorrect and needs fixing
+import { GPUHelper } from "./traces/utility";
 
 var canvasDiv = null;
 
 // The best WebGPU source I've found is https://math.hws.edu/graphicsbook/
 
-class Program {
+interface Program {
+    vertexBuffer: GPUBuffer;
+    vertexCount: number;
+    uniformBuffer: GPUBuffer;
+    uniformBindGroup: GPUBindGroup;
+    pipeline: GPURenderPipeline;
+}
+
+class GridProgram implements Program {
     shader: GPUShaderModule;
     
     vertexBuffer: GPUBuffer;
+    vertexCount: number;
     uniformBuffer: GPUBuffer;
     uniformBindGroup: GPUBindGroup;
     pipeline: GPURenderPipeline;
@@ -50,7 +58,7 @@ class Program {
         });
     
         device.queue.writeBuffer(this.vertexBuffer, 0, vertexCoords);
-
+        this.vertexCount = 3;
         
         let vertexBufferLayout: GPUVertexBufferLayout[] = [ // An array of vertex buffer specifications.
         {
@@ -83,44 +91,106 @@ class Program {
         this.pipeline = device.createRenderPipeline(pipelineDescriptor);
     }
 
-    static async new(shaderUri: string): Promise<Program> {
-        const shaderSource = await getFile(shaderUri);
-
-        device.pushErrorScope("validation");
-        const shader = device.createShaderModule({ code: shaderSource });
-    
-        let error = await device.popErrorScope();
-        if (error) {
-            // The WebGPU context is at this point setup, so swapping the context to 2D doesn't work
-            throw Error("Compilation error in shader!");
-        }
-
-        return new Program(shader);
+    static async new(shaderUri: string): Promise<GridProgram> {
+        return new GridProgram(await GPUHelper.loadShader(device, shaderUri));
     }
 }
 
-let triangleProgram: Program;
+class TriangleProgram implements Program {
+    shader: GPUShaderModule;
+    
+    vertexBuffer: GPUBuffer;
+    vertexCount: number;
+    uniformBuffer: GPUBuffer;
+    uniformBindGroup: GPUBindGroup;
+    pipeline: GPURenderPipeline;
+
+    // This structure is because TypeScript does not allow async constructors.
+    protected constructor(shader: GPUShaderModule) {
+        this.shader = shader;
+
+        // TODO -- these belong in a subclass, somehow.
+        this.uniformBuffer = device.createBuffer({
+            size: 3 * 4,
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        });
+
+        let uniformFragmentLayout: GPUBindGroupLayoutEntry = {
+            binding: 0,
+            visibility: GPUShaderStage.FRAGMENT,
+            buffer: { type: "uniform" }
+        };
+        let uniformBindGroupLayout = device.createBindGroupLayout({ entries: [uniformFragmentLayout] });
+
+        // vec3f(4-byte) color
+        this.uniformBindGroup = device.createBindGroup({
+            layout: uniformBindGroupLayout,
+            entries: [{
+                binding: 0,
+                resource: { buffer: this.uniformBuffer, offset: 0, size: 3 * 4 }
+                }
+            ]
+        });
+
+        const vertexCoords = new Float32Array([   // 2D coords for drawing a triangle.
+            -0.8, -0.6, 0.8, -0.6, 0, 0.7
+        ]); // X-1=Left, X+1=Right, Y-1=Bottom, Y+1=Top
+    
+        this.vertexBuffer = device.createBuffer({
+            size: vertexCoords.byteLength,
+            usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+        });
+    
+        device.queue.writeBuffer(this.vertexBuffer, 0, vertexCoords);
+        this.vertexCount = 3;
+        
+        let vertexBufferLayout: GPUVertexBufferLayout[] = [ // An array of vertex buffer specifications.
+        {
+            attributes: [{ shaderLocation: 0, offset: 0, format: "float32x2" } as GPUVertexAttribute],
+            arrayStride: 8,
+            stepMode: "vertex"
+        }];
+    
+        
+        let gpuPipelineLayout = device.createPipelineLayout({ bindGroupLayouts: [uniformBindGroupLayout] });
+        let pipelineDescriptor: GPURenderPipelineDescriptor = {
+            vertex: { // Configuration for the vertex shader.
+                module: this.shader,
+                entryPoint: "vertexMain",
+                buffers: vertexBufferLayout
+            },
+            fragment: { // Configuration for the fragment shader.
+                module: this.shader,
+                entryPoint: "fragmentMain",
+                targets: [{
+                    format: navigator.gpu.getPreferredCanvasFormat()
+                }]
+            },
+            primitive: {
+                topology: "triangle-list"
+            },
+            layout: gpuPipelineLayout
+        };
+        
+        this.pipeline = device.createRenderPipeline(pipelineDescriptor);
+    }
+
+    static async new(shaderUri: string): Promise<TriangleProgram> {
+        return new TriangleProgram(await GPUHelper.loadShader(device, shaderUri));
+    }
+}
+
+let triangleProgram: TriangleProgram;
+let gridProgram: GridProgram;
 
 let device: GPUDevice;
 let context: GPUCanvasContext;
 
 async function initDeviceAndContext(canvas): Promise<boolean> {
-    if (!navigator.gpu) {
-        renderErrorMessage(canvas, "WebGPU is not supported in this browser.",
-            "If on Firefox, enable WebGPU by:",
-            " - Navigating to 'about:config'",
-            " - Enabling 'dom.webgpu.enabled'"
-        );
+    device = await GPUHelper.getWebGPUDevice(canvas);
+    if (device == null) {
         return false;
     }
-
-    let adapter = await navigator.gpu.requestAdapter();
-    if (!adapter) {
-        renderErrorMessage(canvas, "WebGPU is supported, but this app was unable to get the WebGPU adapter.");
-        return false;
-    }
-
-    device = await adapter.requestDevice();
 
     context = canvas.getContext("webgpu");
     context.configure({
@@ -138,7 +208,8 @@ async function initWebGPU(canvas): Promise<boolean> {
     }
 
     // Just some samples to get off of the ground
-    triangleProgram = await Program.new("/static/game/gpu/triangle.wgsl");
+    triangleProgram = await TriangleProgram.new("/static/game/gpu/triangle.wgsl");
+    gridProgram = await GridProgram.new("/static/game/gpu/grid.wgsl");
 
     return true;
 }
@@ -183,25 +254,23 @@ function renderFrame() {
     let timeDelta = (now - previousTime) / 1000; 
     previousTime = now;
 
-    device.queue.writeBuffer(triangleProgram.uniformBuffer, 0, new Float32Array([Math.random(), 0.5, 0.8]));
-
-
-    let colorAttachment: GPURenderPassColorAttachment = {
-        clearValue: { r: 0.5, g: 0.5, b: 0.5, a: 1 },  // gray background
-        loadOp: "clear", // Alternative is "load".
-        storeOp: "store",  // Alternative is "discard".
-        view: context.getCurrentTexture().createView()  // Draw to the canvas.
-    };
-
     let commandEncoder = device.createCommandEncoder();
+    let passEncoder = commandEncoder.beginRenderPass(GPUHelper.createRenderPassDescriptor(context));
 
-    let renderPassDescriptor: GPURenderPassDescriptor = { colorAttachments: [colorAttachment] };
+    var program: Program;
+    if (mode == 2) {
+        program = triangleProgram;
+        
+        device.queue.writeBuffer(program.uniformBuffer, 0, new Float32Array([Math.random(), 0.5, 0.8]));
+    } else if (mode == 1) {
+        program = gridProgram;
+    }
 
-    let passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
-    passEncoder.setPipeline(triangleProgram.pipeline);            // Specify pipeline.
-    passEncoder.setVertexBuffer(0, triangleProgram.vertexBuffer);  // Attach vertex buffer.
-    passEncoder.setBindGroup(0, triangleProgram.uniformBindGroup); // Attach bind group.
-    passEncoder.draw(3);                          // Generate vertices.
+    // Just like OpenGL, attach everything listed for drawing.
+    passEncoder.setPipeline(program.pipeline);
+    passEncoder.setVertexBuffer(0, program.vertexBuffer);
+    passEncoder.setBindGroup(0, program.uniformBindGroup);
+    passEncoder.draw(program.vertexCount);
     passEncoder.end();
 
     let commandBuffer = commandEncoder.finish();
@@ -219,10 +288,16 @@ window.addEventListener("resize", () => {
     // console.log(`${cssWidth}x${cssHeight}`)
 });
 
+var mode = 2;
 window.addEventListener('keyup', (ev) => {
     console.log(`${ev.code} ${ev.key}`);
 });
 
 window.addEventListener('keydown', (ev) => {
     console.log(`${ev.code} ${ev.key}`);
+    if (ev.key == "2") {
+        mode = 2;
+    } else if (ev.key == "1") {
+        mode = 1;
+    }
 }); 
