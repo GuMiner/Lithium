@@ -1,4 +1,5 @@
 import { GPUHelper } from "./traces/utility";
+import { Mode, GlobalMode } from "./traces/mode";
 
 var canvasDiv: HTMLDivElement = null;
 var canvas: HTMLCanvasElement = null;
@@ -216,6 +217,16 @@ class GridProgram implements Program {
         device.queue.writeBuffer(this.gridBufferPong, 0, colorData);
     }
 
+    randomizeArea(device: GPUDevice) {
+        let colorData = new Uint32Array(this.simWidth*this.simHeight);
+        for (let i = 0; i < this.simWidth * this.simHeight; i++) {
+            colorData[i] = Math.floor(Math.random() * 2) * 5; // 0 to 1, resulting in either 0 or 5
+        }
+
+        device.queue.writeBuffer(this.gridBufferPing, 0, colorData);
+        device.queue.writeBuffer(this.gridBufferPong, 0, colorData);
+    }
+
     static async new(shaderUri: string, computeShaderUri: string): Promise<GridProgram> {
         return new GridProgram(await GPUHelper.loadShader(device, shaderUri), await GPUHelper.loadShader(device, computeShaderUri));
     }
@@ -346,14 +357,20 @@ async function initWebGPU(canvas): Promise<boolean> {
 function enterFullscreen() {
     // Fullscreen requests can only be made if triggered by a user.
     // As such, we need to do this call in a function triggered by a button press.
-    // canvasDiv.requestFullscreen();
+    canvasDiv.requestFullscreen();
     // globalEngine.switchFullscreen(false);
     //globalEngine.resize(true);
 }
 
 (window as any).enterFullscreen = enterFullscreen;
-(window as any).triangleMode = triangleMode;
-(window as any).simMode = simMode;
+(window as any).randomize = randomize;
+
+var randomizeArea: boolean = false;
+function randomize() {
+    if (GlobalMode == Mode.Grid) {
+        randomizeArea = true;
+    }
+}
 
 let previousTime = null;
 
@@ -380,7 +397,11 @@ window.addEventListener('load', async () => {
 });
 
 var pingPong = 0;
+var delayCounter = 0;
+
+var delayRatio = 2;
 function renderFrame() {
+    delayCounter++;
     let now = performance.now();
     let timeDelta = (now - previousTime) / 1000; 
     previousTime = now;
@@ -389,19 +410,27 @@ function renderFrame() {
     let passEncoder = commandEncoder.beginRenderPass(GPUHelper.createRenderPassDescriptor(context));
 
     var program: Program;
-    if (mode == 2) {
+    if (GlobalMode == Mode.Triangle) {
         program = triangleProgram;
         
         device.queue.writeBuffer(program.uniformBuffer, 0, new Float32Array([Math.random(), 0.5, 0.8]));
-    } else if (mode == 1) {
+    } else if (GlobalMode == Mode.Grid) {
         program = gridProgram;
+
+        if (randomizeArea) {
+            (gridProgram as GridProgram).randomizeArea(device);
+            randomizeArea = false;
+        }
 
         device.queue.writeBuffer(program.uniformBuffer, 0, new Float32Array([canvas.width, canvas.height]));
         device.queue.writeBuffer((program as GridProgram).pingPongBuffer, 0, new Uint32Array([pingPong, pingPong]));
-        if (pingPong == 0) {
-            pingPong = 1;
-        } else {
-            pingPong = 0;
+        if (delayCounter % delayRatio == 0)
+        {
+            if (pingPong == 0) {
+                pingPong = 1;
+            } else {
+                pingPong = 0;
+            }
         }
     }
 
@@ -416,7 +445,7 @@ function renderFrame() {
     passEncoder.draw(program.vertexCount);
     passEncoder.end();
 
-    if (mode == 1) {
+    if (GlobalMode == Mode.Grid && delayCounter % delayRatio == 0) {
         let computePassEncoder = commandEncoder.beginComputePass();
         computePassEncoder.setPipeline((program as GridProgram).computePipeline);
         computePassEncoder.setBindGroup(0, (program as GridProgram).computeBindGroup);
@@ -438,25 +467,3 @@ window.addEventListener("resize", () => {
     // canvas.setAttribute('height', cssHeight);
     // console.log(`${cssWidth}x${cssHeight}`)
 });
-
-var mode = 1;
-window.addEventListener('keyup', (ev) => {
-    console.log(`${ev.code} ${ev.key}`);
-});
-
-window.addEventListener('keydown', (ev) => {
-    console.log(`${ev.code} ${ev.key}`);
-    if (ev.key == "2") {
-        mode = 2;
-    } else if (ev.key == "1") {
-        mode = 1;
-    }
-});
-
-function triangleMode() {
-    mode = 2;
-}
-
-function simMode() {
-    mode = 1;
-}
