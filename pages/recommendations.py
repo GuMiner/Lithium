@@ -82,7 +82,7 @@ referenceSets = [
         ]),
         ReferenceGroup("Electronics", "June 2024", [
             Reference("Antenna Design (4nec2)", "https://www.qsl.net/4nec2/"),
-            Reference("PCB Design (KiCad)", "http://kicad-pcb.org/"),
+            Reference("PCB Design (KiCad)", "https://www.kicad.org/"),
             Reference("Simulation (LTspice)", "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html"),
         ]),
     ]),

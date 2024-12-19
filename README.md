@@ -9,6 +9,8 @@ VSCode extensions:
 - Jinja template language support: https://marketplace.visualstudio.com/items?itemName=wholroyd.jinja
 
 ## Project creation
+### Python setup
+Install python: https://www.python.org/downloads/
 ```batch
 python -m venv .venv
 .venv\Scripts\activate
@@ -22,6 +24,14 @@ pip install Flask-SocketIO
 pip install watchdog
 pip install cssmin
 pip install jsmin
+```
+
+### Node Setup
+Install NodeJS: https://nodejs.org/en/download/prebuilt-installer
+
+```batch
+npm install
+npm install -g sass
 ```
 
 ## Development Debugging

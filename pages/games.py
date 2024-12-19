@@ -84,7 +84,8 @@ def peer_ice(offer):
 # Load the TURN server at runtime to make it more easily configurable.
 script_path = os.path.abspath(os.path.dirname(__file__))
 file_path = Path(os.path.join(script_path, 'turn-details.json'))
-turn_server = json.loads(file_path.read_text())
+if os.path.exists(file_path):
+    turn_server = json.loads(file_path.read_text())
 
 @base.SOCKETIO.on('turn-server-request')
 def turn_details():
