@@ -17,7 +17,7 @@
   "dependencies": {
     "@picocss/pico": "^2.0.6",
     "htmx.org": "^1.9.11",
-    "katex": "^0.16.10",
+    "katex": "^0.16.21",
     "socket.io-client": "^4.7.5"
   }
 }
