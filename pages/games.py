@@ -20,23 +20,28 @@ class Game:
 def index():
     game_cards = [
         Game("blocks", "/static/game/icons/blocks.png", "/games/blocks"),
-        Game("lobby", "/static/game/icons/pending.png", "/games/lobby"),
         Game("traces", "/static/game/icons/traces.png", "/games/traces"),
+        Game("ai", "/static/game/icons/ai.png", "/games/ai"),
+        Game("lobby", "/static/game/icons/pending.png", "/games/lobby"),
     ]
 
     return render_template("games/games.html", games=game_cards)
+
+@games.route("/ai")
+def ai():
+    return render_template("ai.html")
 
 @games.route("/blocks")
 def blocks():
     return render_template("blocks.html")
 
-@games.route("/lobby")
-def lobby():
-    return render_template("lobby.html")
-
 @games.route("/traces")
 def traces():
     return render_template("traces.html")
+
+@games.route("/lobby")
+def lobby():
+    return render_template("lobby.html")
 
 # Lobby socketio functions
 @base.SOCKETIO.on('chat-client')

@@ -1,0 +1,40 @@
+{% extends '_base.html' %}
+
+{% block content %}
+{% include "_games_header.html" %}
+<div>
+    <details open class="expandable-border">
+        <summary>Login + Instructions</summary>
+        <p>
+            This is an invite-only web frontend for AI generation using a variety of different models.
+            <br/>
+            <small>You should have already been provided with an Account Key. Use that key to login and use this system. Standard disclaimers apply.</small>
+            <details class="expandable-border">
+                <summary>Disclaimers</summary>
+                <ul>
+                    <li>Don't share your account key</li>
+                    <li>Don't generate content that goes against the TOS of the model you're using.</li>
+                    <li>Don't generate content that is generally not work-appropriate.</li>
+                    <li>Your generated content won't be shared publically or otherwise disclosed unless you select the 'Public' option. <br/>
+                        However, I'll still be able to view them, and may use aggregated generation statistics for reporting and general metrics displays.
+                    </li>
+                    <li>This website is hosted in the US and follows US laws. <br/>
+                        Don't generate content that violates those laws, violates the laws of your country, 
+                        or otherwise causes broader regulations (GDPR, OSA, etc) to be applicable.
+                    </li>
+                </ul>
+            </details>
+        </p>
+        <div class="grid fit-content" style="align-items:center;">
+            <span>Account Key</span>
+            <input />
+            <button>Load Account</button>
+        </div>
+    </details>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript" src="/static/ai.js"></script>
+{% endblock scripts %}
+
