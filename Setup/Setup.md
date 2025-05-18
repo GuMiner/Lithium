@@ -26,7 +26,7 @@ pip install Flask-Assets
 pip install Flask-Compress
 pip install Flask-SocketIO
 pip install gunicorn
-pip install gevents
+pip install gevent
 
 ## Copy over necessary site folders and files
 - /db

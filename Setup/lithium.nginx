@@ -1,3 +1,4 @@
+# This isn't including the certbot-managed items
 server {
     listen 80;
     listen [::]:80;
@@ -6,6 +7,24 @@ server {
 
     location / {
         proxy_pass http://127.0.0.1:8000;
+
+        # Equivalent to 'include proxy_params;'
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Ensure that WebSocket support works
+        proxy_http_version 1.1;
+        proxy_redirect off;
+        proxy_buffering off;
+        proxy_ignore_client_abort on;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+    }
+
+     location /carbon {
+        proxy_pass http://127.0.0.1:8001;
 
         # Equivalent to 'include proxy_params;'
         proxy_set_header Host $host;
